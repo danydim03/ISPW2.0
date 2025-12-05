@@ -1,6 +1,6 @@
 package org.example.model.user;
 
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
+import org.example.exceptions.*;
 
 
 public interface UserDAOInterface {
@@ -13,7 +13,7 @@ public interface UserDAOInterface {
      * @throws UserNotFoundException thrown if the User cannot be found
      * @throws DAOException          thrown if errors occur while retrieving data from persistence layer
      */
-    User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue;
+    User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue;
 
     /**
      * Retrieves a User with a given codice fiscale
@@ -23,7 +23,7 @@ public interface UserDAOInterface {
      * @throws UserNotFoundException thrown if the User cannot be found
      * @throws DAOException          thrown if errors occur while retrieving data from persistence layer
      */
-    User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue;
+    User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue;
 
     /**
      * Inserts an object into the DB

@@ -1,38 +1,35 @@
-package org.example.model.timer;
+package org.example.model.role.Cliente;
 
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
+import org.example.exceptions.*;
+import org.example.model.user.User;
 
-import java.util.List;
-
-public interface TimerDAOInterface {
-
+public interface ClienteDAOInterface {
     /**
      * Inserts an object into the DB
-     * @param timer the object to insert
+     * @param Cliente the object to insert
      * @throws DAOException thrown if errors occur while retrieving data from persistence layer
      * @throws PropertyException thrown if errors occur while loading properties from .properties file
      * @throws ResourceNotFoundException thrown if the properties resource file cannot be found
      */
-    void insert(AbstractTimer timer) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
+    void insert(Cliente Cliente) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
 
     /**
      * Deletes an object from the DB
-     * @param timer the object to delete
+     * @param Cliente the object to delete
      * @throws DAOException thrown if errors occur while retrieving data from persistence layer
      * @throws PropertyException thrown if errors occur while loading properties from .properties file
      * @throws ResourceNotFoundException thrown if the properties resource file cannot be found
      */
-    void delete(AbstractTimer timer) throws DAOException, PropertyException, ResourceNotFoundException;
+    void delete(Cliente  Cliente) throws DAOException, PropertyException, ResourceNotFoundException;
 
     /**
      * Updates an object present in the DB to its current state
-     * @param timer the object to be updated
+     * @param Cliente the object to be updated
      * @throws DAOException thrown if errors occur while retrieving data from persistence layer
      * @throws PropertyException thrown if errors occur while loading properties from .properties file
      * @throws ResourceNotFoundException thrown if the properties resource file cannot be found
      */
-    void update(AbstractTimer timer) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
+    void update(Cliente Cliente) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
 
-    List<AbstractTimer> getAllTimers(List<AbstractTimer> list) throws UserNotFoundException, DAOException, PropertyException, WrongListQueryIdentifierValue, ObjectNotFoundException, ResourceNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongDegreeCourseCodeException ;
-
+    abstract Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,WrongListQueryIdentifierValue;
 }

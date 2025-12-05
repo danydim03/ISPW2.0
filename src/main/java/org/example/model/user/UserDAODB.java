@@ -1,12 +1,22 @@
 package org.example.model.user;
 
-import it.uniroma2.dicii.ispw.gradely.enums.ExceptionMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.enums.UserRoleEnum;
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
-import it.uniroma2.dicii.ispw.gradely.instances_management_abstracts.DAODBAbstract;
-import it.uniroma2.dicii.ispw.gradely.model.role.professor.ProfessorLazyFactory;
-import it.uniroma2.dicii.ispw.gradely.model.role.secretary.SecretaryLazyFactory;
-import it.uniroma2.dicii.ispw.gradely.model.role.student.StudentLazyFactory;
+import  org.example.enums.ExceptionMessagesEnum;
+import  org.example.enums.UserRoleEnum;
+import  org.example.exceptions.UserNotFoundException;
+import  org.example.exceptions.DAOException;
+import  org.example.exceptions.PropertyException;
+import  org.example.exceptions.ResourceNotFoundException;
+import  org.example.exceptions.UnrecognizedRoleException;
+import  org.example.exceptions.ObjectNotFoundException;
+import  org.example.exceptions.MissingAuthorizationException;
+//import  org.example.exceptions.WrongDegreeCourseCodeException;
+import  org.example.exceptions.WrongListQueryIdentifierValue;
+
+import  org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.role.Cliente.ClienteLazyFactory;
+//import  org.example.model.role.Kebabbaro.ProfessorLazyFactory;
+//import  org.example.model.role.Amministratore.SecretaryLazyFactory;
+
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -30,7 +40,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue {
+    public User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
                 List.of(EMAIL),
@@ -40,7 +50,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue {
+    public User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
                 List.of(CODICE_FISCALE),
@@ -53,7 +63,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
 
 
     @Override
-    protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue {
+    protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         User user = new User(
                 rs.getString("name"),
                 rs.getString("surname"),
@@ -107,11 +117,11 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
      * @throws DAOException              thrown if errors occur while retrieving data from persistence layer
      * @throws UserNotFoundException     thrown if the given User cannot be found
      */
-    protected void setUserRoleByRoleEnum(User user, UserRoleEnum role) throws UnrecognizedRoleException, DAOException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongDegreeCourseCodeException, WrongListQueryIdentifierValue {
+    protected void setUserRoleByRoleEnum(User user, UserRoleEnum role) throws UnrecognizedRoleException, DAOException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         switch (role) {
-            case STUDENT -> user.setRole(StudentLazyFactory.getInstance().getStudentByUser(user));
-            case PROFESSOR -> user.setRole(ProfessorLazyFactory.getInstance().getProfessorByUser(user));
-            case SECRETARY -> user.setRole(SecretaryLazyFactory.getInstance().getSecretaryByUser(user));
+            case CLIENTE -> user.setRole(ClienteLazyFactory.getInstance().getClienteByUser(user));
+            //case KEBABBARO -> user.setRole(ProfessorLazyFactory.getInstance().getProfessorByUser(user));
+            //case AMMINISTRATORE -> user.setRole(SecretaryLazyFactory.getInstance().getSecretaryByUser(user));
             default -> throw new UnrecognizedRoleException(ExceptionMessagesEnum.UNRECOGNIZED_ROLE.message);
         }
     }

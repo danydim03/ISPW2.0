@@ -3,7 +3,7 @@ package org.example;
 import org.example.beans_general.UserBean;
 import org.example.enums.UserErrorMessagesEnum;
 import org.example.loggers_general.GeneralLogger;
-import org.example.use_cases.enroll_to_degree_course.beans.UserData;
+import org.example.use_cases.effettuaOrdine.beans.UserData;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 
@@ -31,9 +31,9 @@ public final class PageNavigationController {
         setUserData(userBean, sessionTokenKey);
         String viewName = "";
         switch (userBean.getRole()) {
-            case 1 -> viewName = "homepage_student";
-            case 2 -> viewName = "homepage_professor";
-            case 3 -> viewName = "homepage_secretary";
+            case 1 -> viewName = "homepage_Cliente";
+            case 2 -> viewName = "homepage_Kebabbaro";
+            case 3 -> viewName = "homepage_Amministratore";
             default ->
                     showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.ROLE_ERROR_TITLE.message, UserErrorMessagesEnum.ROLE_ERROR_MSG.message);
         }
@@ -101,7 +101,7 @@ public final class PageNavigationController {
                 userBean.getSurname(),
                 userBean.getEmail(),
                 userBean.getCodiceFiscale(),
-                userBean.getMatricola(),
+            //    userBean.getMatricola(),
                 userBean.getRole(),
                 tokenKey
         );
@@ -136,7 +136,7 @@ public final class PageNavigationController {
      * @param e         the Exception which caused the Alert to be shown
      */
     public void showAlert(Alert.AlertType alertType, String title, String message, Exception e) {
-        GeneralLogger.logSevere(e.getMessage());
+       // GeneralLogger.logSevere(e.getMessage());
         showAlert(alertType, title, message);
     }
 }

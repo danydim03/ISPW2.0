@@ -36,20 +36,21 @@ public abstract class AbstractRole {
         throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
     }
 
-    public Amministratore getAmministratoreRole() throws MissingAuthorizationException {
-        throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
-    }
+//    public Amministratore getAmministratoreRole() throws MissingAuthorizationException {
+//        throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
+//    }
 
     public UserRoleEnum getRoleEnumType() throws MissingAuthorizationException {
         try {
             getClienteRole();
             return UserRoleEnum.CLIENTE;
-        } catch (MissingAuthorizationException e) {
+        } catch (MissingAuthorizationException e)
+        {
             try {
                 getKebabbaroRole();
-                return UserRoleEnum.PROFESSOR;
+                return UserRoleEnum.KEBABBARO;
             } catch (MissingAuthorizationException ex) {
-                getAmministratoreRole();
+                //getAmministratoreRole();
                 return UserRoleEnum.AMMINISTRATORE;
             }
         }

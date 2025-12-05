@@ -12,14 +12,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginControl {
-    public LoginBean login(String email, String password) throws UserNotFoundException, WrongPasswordException, DAOException, MissingAuthorizationException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue, ObjectNotFoundException, WrongDegreeCourseCodeException {
+    public LoginBean login(String email, String password) throws UserNotFoundException, WrongPasswordException, DAOException, MissingAuthorizationException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue, ObjectNotFoundException {
         User user = UserLazyFactory.getInstance().getUserByEmail(email);
         user.checkPassword(password);
-        String matricola;
+        String ID;
         switch (user.getRole().getRoleEnumType()) {
-            case STUDENT -> matricola = user.getRole().getStudentRole().getMatricola();
-            case PROFESSOR -> matricola = user.getRole().getProfessorRole().getMatricola();
-            default -> matricola = "";
+            case CLIENTE -> ID = user.getRole().getClienteRole().getID();
+            //case KEBABBARO -> ID = user.getRole().getKebabbaroRole().describeRole().getID();
+            //case ADMIN -> ID = user.getRole().getAdminRole().describeRole().getID();
+            default -> ID = "";
         }
         return new LoginBean(
                 SessionManager.getInstance().getSessionTokenKeyByUser(user),
@@ -29,7 +30,7 @@ public class LoginControl {
                         user.getCodiceFiscale(),
                         user.getEmail(),
                         user.getRole().getRoleEnumType(),
-                        matricola
+                        ID
                 )
         );
     }

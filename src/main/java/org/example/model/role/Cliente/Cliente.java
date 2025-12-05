@@ -7,20 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente extends AbstractRole {
-    private String Id;
+    private String ID;
     private List<String> voucherUtilizzati;
     private List<Long> ordiniEffettuati;
     private int punteggio;
 
-    protected Cliente(User user, String matricola) {
+    protected Cliente(User user, String ID) {
         super(user);
-        this.Id = matricola;
+        this.ID = ID;
         this.voucherUtilizzati = new ArrayList<>();
         this.ordiniEffettuati = new ArrayList<>();
         this.punteggio = 0;
 
     }
 
+    public String getID() {
+        return ID;
+    }
 
     public List<String> getVoucherUtilizzati() {
         return new ArrayList<>(voucherUtilizzati);

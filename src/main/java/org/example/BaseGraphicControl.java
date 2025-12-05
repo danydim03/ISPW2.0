@@ -1,13 +1,13 @@
 package org.example;
 
-import org.example.beans_general.PendingEventBean;
+//import org.example.beans_general.PendingEventBean;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.UserErrorMessagesEnum;
 import org.example.exceptions.*;
-import org.example.facades.UserFacade;
-import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventExamVerbalizationGraphicController;
-import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventGradeAcceptanceGraphicController;
-import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventSimpleGraphicController;
+import org.example.Facades.UserFacade;
+//import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventExamVerbalizationGraphicController;
+//import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventGradeAcceptanceGraphicController;
+//import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventSimpleGraphicController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -37,11 +37,11 @@ public class BaseGraphicControl implements Initializable {
     private Button notificationButton;
     @FXML
     private VBox pendingEventList;
-    private final List<PendingEventBean> pendingEvents;
+    //   private final List<PendingEventBean> pendingEvents;
 
     public BaseGraphicControl() {
         this.facade = new UserFacade();
-        pendingEvents = new ArrayList<>();
+        //   pendingEvents = new ArrayList<>();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BaseGraphicControl implements Initializable {
      *
      * @param node the node to be added to the content
      */
-    public void switchTo(Node node){
+    public void switchTo(Node node) {
         content.getChildren().add(node);
         if (content.getChildren().size() >= 2)
             backButton.setVisible(true);
@@ -91,71 +91,72 @@ public class BaseGraphicControl implements Initializable {
         content.getChildren().add(node);
         accountButton.setText(name);
         accountButton.setVisible(true);
-        retrievePendingEvents();
+        //  retrievePendingEvents();
         notificationButton.setVisible(true);
     }
 
     /**
      * Retrieves pending events not yet notified
      */
-    private void retrievePendingEvents() {
-        try {
-            List<PendingEventBean> newPendingEvents = facade.retrievePendingEvents(PageNavigationController.getInstance().getSessionTokenKey());
-            this.pendingEvents.addAll(newPendingEvents);
-            for (PendingEventBean newPendingEvent : newPendingEvents) {
-                switch (newPendingEvent.getType()) {
-                    case EXAM_VERBALIZATION_PENDING ->
-                            pendingEventList.getChildren().add(loadPendingExamVerbalizationView(newPendingEvent));
-                    case GRADE_CONFIRMATION_PENDING ->
-                            pendingEventList.getChildren().add(loadPendingEventGradeAcceptanceView(newPendingEvent));
-                    case EXAM_VERBALIZED, TEST_RESULT_READY, GRADE_AUTO_ACCEPTED ->
-                            pendingEventList.getChildren().add(loadPendingEventSimpleView(newPendingEvent));
-                    default ->
-                            throw new WrongPendingEventTypeException(ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
-                }
-            }
-        } catch (DAOException | UserNotFoundException | WrongListQueryIdentifierValue | ObjectNotFoundException |
-                 UnrecognizedRoleException | MissingAuthorizationException | WrongDegreeCourseCodeException |
-                 WrongPendingEventTypeException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message);
-        } catch (IOException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message);
-        }
-    }
-
-    /**
-     * Displays pending events to the user
-     */
-    @FXML
-    private void showPendingEvents() {
-        retrievePendingEvents();
-        pendingEventList.setVisible(!pendingEventList.isVisible());
-    }
-
-    private Node loadPendingEventSimpleView(PendingEventBean bean) throws IOException {
-        String pendingEventViewName = "pending_event_simple.fxml";
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
-        Node node = loader.load();
-        PendingEventSimpleGraphicController controller = loader.getController();
-        controller.setMessage(bean.getType().message);
-        return node;
-    }
-
-    private Node loadPendingEventGradeAcceptanceView(PendingEventBean bean) throws IOException {
-        String pendingEventViewName = "pending_event_grade_acceptance.fxml";
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
-        Node node = loader.load();
-        PendingEventGradeAcceptanceGraphicController controller = loader.getController();
-        controller.setPendingEvent(bean);
-        return node;
-    }
-
-    private Node loadPendingExamVerbalizationView(PendingEventBean bean) throws IOException {
-        String pendingEventViewName = "pending_event_xam_verbalization.fxml";
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
-        Node node = loader.load();
-        PendingEventExamVerbalizationGraphicController controller = loader.getController();
-        controller.setPendingEvent(bean);
-        return node;
-    }
+//    private void retrievePendingEvents() {
+//        try {
+//            List<PendingEventBean> newPendingEvents = facade.retrievePendingEvents(PageNavigationController.getInstance().getSessionTokenKey());
+//            this.pendingEvents.addAll(newPendingEvents);
+//            for (PendingEventBean newPendingEvent : newPendingEvents) {
+//                switch (newPendingEvent.getType()) {
+//                    case EXAM_VERBALIZATION_PENDING ->
+//                            pendingEventList.getChildren().add(loadPendingExamVerbalizationView(newPendingEvent));
+//                    case GRADE_CONFIRMATION_PENDING ->
+//                            pendingEventList.getChildren().add(loadPendingEventGradeAcceptanceView(newPendingEvent));
+//                    case EXAM_VERBALIZED, TEST_RESULT_READY, GRADE_AUTO_ACCEPTED ->
+//                            pendingEventList.getChildren().add(loadPendingEventSimpleView(newPendingEvent));
+//                    default ->
+//                            throw new WrongPendingEventTypeException(ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
+//                }
+//            }
+//        } catch (DAOException | UserNotFoundException | WrongListQueryIdentifierValue | ObjectNotFoundException |
+//                 UnrecognizedRoleException | MissingAuthorizationException | WrongDegreeCourseCodeException |
+//                 WrongPendingEventTypeException e) {
+//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message);
+//        } catch (IOException e) {
+//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message);
+//        }
+//    }
+//
+//    /**
+//     * Displays pending events to the user
+//     */
+//    @FXML
+//    private void showPendingEvents() {
+//        retrievePendingEvents();
+//        pendingEventList.setVisible(!pendingEventList.isVisible());
+//    }
+//
+//    private Node loadPendingEventSimpleView(PendingEventBean bean) throws IOException {
+//        String pendingEventViewName = "pending_event_simple.fxml";
+//        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
+//        Node node = loader.load();
+//        PendingEventSimpleGraphicController controller = loader.getController();
+//        controller.setMessage(bean.getType().message);
+//        return node;
+//    }
+//
+//    private Node loadPendingEventGradeAcceptanceView(PendingEventBean bean) throws IOException {
+//        String pendingEventViewName = "pending_event_grade_acceptance.fxml";
+//        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
+//        Node node = loader.load();
+//        PendingEventGradeAcceptanceGraphicController controller = loader.getController();
+//        controller.setPendingEvent(bean);
+//        return node;
+//    }
+//
+//    private Node loadPendingExamVerbalizationView(PendingEventBean bean) throws IOException {
+//        String pendingEventViewName = "pending_event_xam_verbalization.fxml";
+//        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(BaseGraphicControl.class.getResource(pendingEventViewName)));
+//        Node node = loader.load();
+//        PendingEventExamVerbalizationGraphicController controller = loader.getController();
+//        controller.setPendingEvent(bean);
+//        return node;
+//    }
+//}
 }

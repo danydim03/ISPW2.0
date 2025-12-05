@@ -1,4 +1,4 @@
-package org.example_use_cases.login;
+package org.example.use_cases.login;
 
 import org.example.PageNavigationController;
 import org.example.beans_general.LoginBean;
@@ -51,7 +51,7 @@ public class LoginGraphicControl implements Initializable {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message, e);
         } catch (UserNotFoundException e) {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message, e);
-        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException | WrongDegreeCourseCodeException |
+        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
                  WrongListQueryIdentifierValue e) {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
         } catch (WrongPasswordException e) {
