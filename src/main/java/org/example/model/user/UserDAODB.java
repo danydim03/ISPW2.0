@@ -9,13 +9,16 @@ import  org.example.exceptions.ResourceNotFoundException;
 import  org.example.exceptions.UnrecognizedRoleException;
 import  org.example.exceptions.ObjectNotFoundException;
 import  org.example.exceptions.MissingAuthorizationException;
-//import  org.example.exceptions.WrongDegreeCourseCodeException;
+
 import  org.example.exceptions.WrongListQueryIdentifierValue;
 
 import  org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.role.Amministratore.Amministratore;
+import org.example.model.role.Amministratore.AmministratoreLazyFactory;
 import org.example.model.role.Cliente.ClienteLazyFactory;
-//import  org.example.model.role.Kebabbaro.ProfessorLazyFactory;
-//import  org.example.model.role.Amministratore.SecretaryLazyFactory;
+import org.example.model.role.Kebabbaro.Kebabbaro;
+import org.example.model.role.Kebabbaro.KebabbaroLazyFactory;
+
 
 
 import java.sql.Date;
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  {
     private static final   String EMAIL = "email";
-    private static final  String CODICE_FISCALE = "codice_fiscale";
+    private static final  String ID = "ID";
     protected static UserDAOInterface instance;
 
     private UserDAODB() {
@@ -50,10 +53,10 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public User getUserByID(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
-                List.of(CODICE_FISCALE),
+                List.of(ID),
                 List.of(codiceFiscale),
                 null
         );
@@ -67,7 +70,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
         User user = new User(
                 rs.getString("name"),
                 rs.getString("surname"),
-                rs.getString(CODICE_FISCALE),
+                rs.getString(ID),
                 rs.getString(EMAIL),
                 rs.getString("password"),
                 rs.getDate("registration_date").toLocalDate()
@@ -85,7 +88,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     public void insert(User user) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 "USER",
-                List.of(user.getCodiceFiscale(), user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(),user.getRole().getRoleEnumType().type)
+                List.of(user.getID(), user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(),user.getRole().getRoleEnumType().type)
         );
     }
 
@@ -93,8 +96,8 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     public void delete(User user) throws DAOException, PropertyException, ResourceNotFoundException {
         deleteQuery(
                 "USER",
-                List.of(CODICE_FISCALE),
-                List.of(user.getCodiceFiscale())
+                List.of(ID),
+                List.of(user.getID())
         );
     }
 
@@ -104,8 +107,8 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
                 "USER",
                 List.of( "name", "surname", "password", "registration_date", EMAIL, "role"),
                 List.of(user.getName(),user.getSurname(),user.getPassword(),Date.valueOf(user.getRegistrationDate()),user.getEmail(),user.getRole().getRoleEnumType().type),
-                List.of(CODICE_FISCALE),
-                List.of(user.getCodiceFiscale()));
+                List.of(ID),
+                List.of(user.getID()));
     }
 
     /**
@@ -120,8 +123,8 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     protected void setUserRoleByRoleEnum(User user, UserRoleEnum role) throws UnrecognizedRoleException, DAOException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         switch (role) {
             case CLIENTE -> user.setRole(ClienteLazyFactory.getInstance().getClienteByUser(user));
-            //case KEBABBARO -> user.setRole(ProfessorLazyFactory.getInstance().getProfessorByUser(user));
-            //case AMMINISTRATORE -> user.setRole(SecretaryLazyFactory.getInstance().getSecretaryByUser(user));
+            case KEBABBARO -> user.setRole(KebabbaroLazyFactory.getInstance().getKebabbaroByUser(user));
+            case AMMINISTRATORE -> user.setRole(AmministratoreLazyFactory.getInstance().getAmministratoreByUser(user));
             default -> throw new UnrecognizedRoleException(ExceptionMessagesEnum.UNRECOGNIZED_ROLE.message);
         }
     }

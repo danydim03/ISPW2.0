@@ -27,7 +27,7 @@ public class LoginControl {
                 new UserBean(
                         user.getName(),
                         user.getSurname(),
-                        user.getCodiceFiscale(),
+                        user.getID(),
                         user.getEmail(),
                         user.getRole().getRoleEnumType(),
                         ID

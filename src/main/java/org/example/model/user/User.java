@@ -9,16 +9,16 @@ import java.time.LocalDate;
 public class User {
     private String name;
     private String surname;
-    private String codiceFiscale;
+    private String ID;
     private String email;
     private String password;
     private LocalDate registrationDate;
     private AbstractRole role;
 
-    protected User(String name, String surname, String codiceFiscale, String email, String password, LocalDate registrationDate) {
+    protected User(String name, String surname, String ID, String email, String password, LocalDate registrationDate) {
         this.name = name;
         this.surname = surname;
-        this.codiceFiscale = codiceFiscale;
+        this.ID = ID;
         this.email = email;
         this.password = password;
         this.registrationDate = registrationDate;
@@ -40,12 +40,12 @@ public class User {
         this.surname = surname;
     }
 
-    public String getCodiceFiscale(){
-        return codiceFiscale;
+    public String getID(){
+        return ID;
     }
 
-    public void setCodiceFiscale(String codiceFiscale){
-        this.codiceFiscale = codiceFiscale;
+    public void setID(String ID){
+        this.ID = this.ID;
     }
 
     public String getEmail(){
@@ -103,7 +103,7 @@ public class User {
                 && user.getEmail().equals(email)
                 && user.getName().equals(name)
                 && user.getSurname().equals(surname)
-                && user.getCodiceFiscale().equals(codiceFiscale)
+                && user.getID().equals(ID)
                 && user.getPassword().equals(password);
     }
 }

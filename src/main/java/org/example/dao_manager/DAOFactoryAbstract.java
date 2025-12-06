@@ -17,8 +17,9 @@ import org.example.model.role.Cliente.ClienteDAOInterface;
 //import org.example.model.exam.ExamDAOInterface;
 //import org.example.model.exam_result.ExamResultDAOInterface;
 //import org.example.model.pending_events.PendingEventDAOInterface;
-//import org.example.model.role.professor.AbstractProfessorDAO;
-//import org.example.model.role.secretary.AbstractSecretaryDAO;
+import org.example.model.role.Kebabbaro.Kebabbaro;
+import org.example.model.role.Kebabbaro.KebabbaroDAOInterface;
+import org.example.model.role.Amministratore.AmministratoreDAOInterface;
 //import org.example.model.role.student.StudentDAOInterface;
 //import org.example.model.subject_course.SubjectCourseDAOInterface;
 //import org.example.model.test.TestDAOAbstract;
@@ -61,8 +62,8 @@ public abstract class                                                           
 //    public abstract ExamDAOInterface getExamDAO();
 //    public abstract ExamResultDAOInterface getExamResultDAO();
 //    public abstract PendingEventDAOInterface getPendingEventDAO();
-//    public abstract AbstractProfessorDAO getProfessorDAO();
-//    public abstract AbstractSecretaryDAO getSecretaryDAO();
+    public abstract KebabbaroDAOInterface getKebabbaroDAO();
+   public abstract AmministratoreDAOInterface getAmministratoreDAO();
     public abstract ClienteDAOInterface getClienteDAO();
 
     //public abstract SubjectCourseDAOInterface getSubjectCourseDAO();

@@ -26,7 +26,6 @@ public class Kebabbaro extends AbstractRole {
     public List<String> getSignatureDishes() {
         return signatureDishes;
     }
-
     public int getMaxOrdersPerHour() {
         return maxOrdersPerHour;
     }

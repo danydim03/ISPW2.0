@@ -42,9 +42,6 @@ public class ClienteLazyFactory {
     public Cliente newCliente(User user, String ID) throws DAOException, MissingAuthorizationException {
         Cliente student = new Cliente(user, ID);
         user.setRole(student);
-//        if (titles != null){
-//         //   student.setTitles(titles);
-//        }
         try {
             DAOFactoryAbstract.getInstance().getClienteDAO().insert(student);
         } catch (PropertyException | ResourceNotFoundException e) {

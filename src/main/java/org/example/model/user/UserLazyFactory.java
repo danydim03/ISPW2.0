@@ -43,13 +43,13 @@ public class UserLazyFactory {
         return daoUser;
     }
 
-    public User getUserByCodiceFiscale(String codiceFiscale) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue, ObjectNotFoundException, MissingAuthorizationException {
+    public User getUserByID(String ID) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue, ObjectNotFoundException, MissingAuthorizationException {
         for (User u : registeredUsers) {
-            if (u.getCodiceFiscale().equals(codiceFiscale)) {
+            if (u.getID().equals(ID)) {
                 return u;
             }
         }
-        User daoUser = DAOFactoryAbstract.getInstance().getUserDAO().getUserByCodiceFiscale(codiceFiscale);
+        User daoUser = DAOFactoryAbstract.getInstance().getUserDAO().getUserByID(ID);
         registeredUsers.add(daoUser);
         return daoUser;
     }

@@ -23,7 +23,7 @@ public interface UserDAOInterface {
      * @throws UserNotFoundException thrown if the User cannot be found
      * @throws DAOException          thrown if errors occur while retrieving data from persistence layer
      */
-    User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue;
+    User getUserByID(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue;
 
     /**
      * Inserts an object into the DB

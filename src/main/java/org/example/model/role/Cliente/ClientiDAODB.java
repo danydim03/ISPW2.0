@@ -41,7 +41,7 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
                 CLIENTE, // da cambiare
 
                 List.of(CODICE),
-                List.of(user.getCodiceFiscale()),
+                List.of(user.getID()),
                 List.of(user)
         );
     }

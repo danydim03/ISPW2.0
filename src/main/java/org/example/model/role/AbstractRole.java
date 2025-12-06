@@ -3,6 +3,7 @@ package org.example.model.role;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.UserRoleEnum;
 import org.example.exceptions.MissingAuthorizationException;
+import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.role.Cliente.Cliente;
 import org.example.model.role.Kebabbaro.Kebabbaro;
 //import it.uniroma2.dicii.ispw.gradely.model.role.secretary.Secretary;
@@ -24,8 +25,8 @@ public abstract class AbstractRole {
         this.user = user;
     }
 
-    public String getCodiceFiscale(){
-        return user.getCodiceFiscale();
+    public String getID(){
+        return user.getID();
     }
 
     public Cliente getClienteRole() throws MissingAuthorizationException {
@@ -36,9 +37,9 @@ public abstract class AbstractRole {
         throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
     }
 
-//    public Amministratore getAmministratoreRole() throws MissingAuthorizationException {
-//        throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
-//    }
+    public Amministratore getAmministratoreRole() throws MissingAuthorizationException {
+        throw new MissingAuthorizationException(ExceptionMessagesEnum.MISSING_AUTH.message);
+    }
 
     public UserRoleEnum getRoleEnumType() throws MissingAuthorizationException {
         try {
