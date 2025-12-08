@@ -28,6 +28,7 @@ import org.example.model.role.Amministratore.AmministratoreDAOInterface;
 
 
 import org.example.model.user.UserDAOInterface;
+import org.example.model.voucher.VoucherDAOInterface;
 
 public abstract class                                                                                                                DAOFactoryAbstract {
 
@@ -56,7 +57,7 @@ public abstract class                                                           
    public abstract AmministratoreDAOInterface getAmministratoreDAO();
     public abstract ClienteDAOInterface getClienteDAO();
     public abstract OrdineDAOInterface getOrdineDAO();
-
+    public abstract VoucherDAOInterface getVoucherDAO();
     public abstract UserDAOInterface getUserDAO();
 
 }
