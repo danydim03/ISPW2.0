@@ -1,6 +1,6 @@
-package org.example.model.voucher;
+package org.example.model. voucher;
 
-import java. time.LocalDate;
+import java.time.LocalDate;
 
 /**
  * Voucher con sconto fisso.
@@ -11,7 +11,7 @@ public class VoucherFisso implements Voucher {
     private Long id;
     private String codice;
     private double importoSconto;
-    private double minimoOrdine; // importo minimo per applicare lo sconto
+    private double minimoOrdine;
     private LocalDate dataScadenza;
     private boolean attivo;
 
@@ -45,7 +45,6 @@ public class VoucherFisso implements Voucher {
         if (totaleOrdine < minimoOrdine) {
             return 0;
         }
-        // Lo sconto non può superare il totale
         return Math.min(importoSconto, totaleOrdine);
     }
 
@@ -67,7 +66,7 @@ public class VoucherFisso implements Voucher {
         if (!attivo) {
             return false;
         }
-        if (dataScadenza != null && LocalDate.now().isAfter(dataScadenza)) {
+        if (dataScadenza != null && LocalDate.now(). isAfter(dataScadenza)) {
             return false;
         }
         return true;
@@ -80,7 +79,7 @@ public class VoucherFisso implements Voucher {
 
     @Override
     public void setId(Long id) {
-        this.id = id;
+        this. id = id;
     }
 
     @Override
@@ -104,13 +103,9 @@ public class VoucherFisso implements Voucher {
 
     @Override
     public void setAttivo(boolean attivo) {
-        this. attivo = attivo;
+        this.attivo = attivo;
     }
 
-    /**
-     * Restituisce l'importo dello sconto
-     * @return l'importo fisso dello sconto
-     */
     public double getImportoSconto() {
         return importoSconto;
     }
@@ -119,10 +114,6 @@ public class VoucherFisso implements Voucher {
         this.importoSconto = importoSconto;
     }
 
-    /**
-     * Restituisce l'importo minimo dell'ordine per applicare lo sconto
-     * @return l'importo minimo
-     */
     public double getMinimoOrdine() {
         return minimoOrdine;
     }

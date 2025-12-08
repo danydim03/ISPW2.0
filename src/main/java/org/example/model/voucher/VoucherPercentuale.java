@@ -1,4 +1,4 @@
-package org. example.model.voucher;
+package org.example.model. voucher;
 
 import java.time.LocalDate;
 
@@ -10,7 +10,7 @@ public class VoucherPercentuale implements Voucher {
 
     private Long id;
     private String codice;
-    private double percentuale; // es. 10. 0 per 10%
+    private double percentuale;
     private LocalDate dataScadenza;
     private boolean attivo;
 
@@ -20,7 +20,7 @@ public class VoucherPercentuale implements Voucher {
     public VoucherPercentuale(String codice, double percentuale) {
         this.codice = codice;
         this.percentuale = percentuale;
-        this.attivo = true;
+        this. attivo = true;
     }
 
     /**
@@ -54,7 +54,7 @@ public class VoucherPercentuale implements Voucher {
 
     @Override
     public boolean isValido() {
-        if (!attivo) {
+        if (! attivo) {
             return false;
         }
         if (dataScadenza != null && LocalDate.now().isAfter(dataScadenza)) {
@@ -70,7 +70,7 @@ public class VoucherPercentuale implements Voucher {
 
     @Override
     public void setId(Long id) {
-        this. id = id;
+        this.id = id;
     }
 
     @Override
@@ -97,10 +97,6 @@ public class VoucherPercentuale implements Voucher {
         this.attivo = attivo;
     }
 
-    /**
-     * Restituisce la percentuale di sconto
-     * @return la percentuale (es. 10.0 per 10%)
-     */
     public double getPercentuale() {
         return percentuale;
     }
@@ -110,6 +106,6 @@ public class VoucherPercentuale implements Voucher {
     }
 
     public void setCodice(String codice) {
-        this.codice = codice;
+        this. codice = codice;
     }
 }

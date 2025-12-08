@@ -1,4 +1,4 @@
-package org. example.model.voucher;
+package org.example.model.voucher;
 
 import java.time.LocalDate;
 

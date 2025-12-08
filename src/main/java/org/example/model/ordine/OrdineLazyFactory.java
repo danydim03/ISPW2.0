@@ -1,11 +1,10 @@
 package org.example.model.ordine;
 
-import org. example.dao_manager.DAOFactoryAbstract;
+import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.ExceptionMessagesEnum;
-import org.example.exceptions.*;
-import org.example.model.voucher. Voucher;
-import org.example.model.voucher.VoucherLazyFactory;
 import org.example.enums.StatoOrdine;
+import org.example.exceptions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,14 +53,10 @@ public class OrdineLazyFactory {
         // Se non trovato, recupera dal DAO
         try {
             Ordine daoOrdine = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdineByNumero(numeroOrdine);
-
-            // Carica il voucher se presente
-            caricaVoucherPerOrdine(daoOrdine);
-
             ordiniCache.add(daoOrdine);
             return daoOrdine;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO. message, e);
+            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
         }
     }
 
@@ -78,17 +73,16 @@ public class OrdineLazyFactory {
         try {
             List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByCliente(clienteId);
 
-            // Aggiorna cache e carica voucher
+            // Aggiorna cache
             for (Ordine ordine : ordini) {
-                if (!isOrdineInCache(ordine. getNumeroOrdine())) {
-                    caricaVoucherPerOrdine(ordine);
-                    ordiniCache.add(ordine);
+                if (! isOrdineInCache(ordine. getNumeroOrdine())) {
+                    ordiniCache. add(ordine);
                 }
             }
 
             return ordini;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO. message, e);
         }
     }
 
@@ -103,19 +97,18 @@ public class OrdineLazyFactory {
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
 
         try {
-            List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByStato(stato);
+            List<Ordine> ordini = DAOFactoryAbstract.getInstance(). getOrdineDAO().getOrdiniByStato(stato);
 
             // Aggiorna cache
             for (Ordine ordine : ordini) {
                 if (!isOrdineInCache(ordine.getNumeroOrdine())) {
-                    caricaVoucherPerOrdine(ordine);
                     ordiniCache.add(ordine);
                 }
             }
 
             return ordini;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
         }
     }
 
@@ -143,7 +136,7 @@ public class OrdineLazyFactory {
             return ordine;
 
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO. message, e);
         }
     }
 
@@ -223,15 +216,6 @@ public class OrdineLazyFactory {
             }
         }
         return false;
-    }
-
-    /**
-     * Carica il voucher associato a un ordine (se presente).
-     */
-    private void caricaVoucherPerOrdine(Ordine ordine) {
-        // Il voucher viene gestito separatamente
-        // Se necessario, può essere caricato tramite VoucherLazyFactory
-        // Per ora l'ordine ha già NessunVoucher di default
     }
 
     /**

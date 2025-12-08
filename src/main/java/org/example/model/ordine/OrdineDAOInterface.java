@@ -1,9 +1,10 @@
-package org.example.model.ordine;
+package org.example. model.ordine;
 
 import org.example.exceptions.*;
 
 import java.util.List;
 import org.example.enums.StatoOrdine;
+
 /**
  * Interfaccia DAO per la gestione della persistenza degli Ordini.
  */
@@ -12,12 +13,11 @@ public interface OrdineDAOInterface {
     /**
      * Inserisce un nuovo Ordine nel DB
      * @param ordine l'ordine da inserire
-     * @return l'ID generato per l'ordine
      * @throws DAOException errori durante l'accesso al persistence layer
      * @throws PropertyException errori nel caricamento delle properties
      * @throws ResourceNotFoundException risorsa properties non trovata
      */
-    Long insert(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
+    void insert(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
 
     /**
      * Elimina un Ordine dal DB
