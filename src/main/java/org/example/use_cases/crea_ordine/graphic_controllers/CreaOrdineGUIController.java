@@ -8,76 +8,57 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.BaseGraphicControl;
-import org.example.Facades.CreaOrdineFacade;
+import org.example.PageNavigationController;
+import org.example.exceptions.*;
+import org.example.exceptions.CreaOrdineException;
+import org.example.use_cases.crea_ordine.CreaOrdineFacade;
 import org.example.use_cases.crea_ordine.beans.FoodBean;
 import org.example.use_cases.crea_ordine.beans.OrdineBean;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
-import java.util.List;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.logging.Level;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class CreaOrdineGUIController  implements Initializable {
+public class CreaOrdineGUIController extends BaseGraphicControl implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
 
-    @FXML
-    private ComboBox<String> comboProdottoBase;
-    @FXML
-    private CheckBox checkCipolla;
-    @FXML
-    private CheckBox checkSalsaYogurt;
-    @FXML
-    private CheckBox checkPatatine;
-    @FXML
-    private CheckBox checkMixVerdure;
+    @FXML private RadioButton radioPanino;
+    @FXML private RadioButton radioPiadina;
+    @FXML private RadioButton radioPiatto;
+    private ToggleGroup baseGroup;
 
-    @FXML
-    private TableView<RigaOrdineBean> tabellaOrdine;
-    @FXML
-    private TableColumn<RigaOrdineBean, String> colonnaDescrizione;
-    @FXML
-    private TableColumn<RigaOrdineBean, String> colonnaPrezzo;
-    @FXML
-    private TableColumn<RigaOrdineBean, String> colonnaDurata;
+    @FXML private CheckBox checkCipolla;
+    @FXML private CheckBox checkSalsaYogurt;
+    @FXML private CheckBox checkPatatine;
+    @FXML private CheckBox checkMixVerdure;
 
-    @FXML
-    private Label labelSubtotale;
-    @FXML
-    private Label labelSconto;
-    @FXML
-    private Label labelTotale;
-    @FXML
-    private Label labelDurata;
-    @FXML
-    private Label labelVoucherInfo;
-    @FXML
-    private Label labelNumeroOrdine;
+    @FXML private TableView<RigaOrdineBean> tabellaOrdine;
+    @FXML private TableColumn<RigaOrdineBean, String> colonnaDescrizione;
+    @FXML private TableColumn<RigaOrdineBean, String> colonnaPrezzo;
+    @FXML private TableColumn<RigaOrdineBean, String> colonnaDurata;
 
-    @FXML
-    private TextField textFieldVoucher;
+    @FXML private Label labelSubtotale;
+    @FXML private Label labelSconto;
+    @FXML private Label labelTotale;
+    @FXML private Label labelDurata;
+    @FXML private Label labelVoucherInfo;
+    @FXML private Label labelNumeroOrdine;
 
-    @FXML
-    private Button btnAggiungiProdotto;
-    @FXML
-    private Button btnRimuoviProdotto;
-    @FXML
-    private Button btnApplicaVoucher;
-    @FXML
-    private Button btnRimuoviVoucher;
-    @FXML
-    private Button btnConfermaOrdine;
-    @FXML
-    private Button btnAnnullaOrdine;
+    @FXML private TextField textFieldVoucher;
 
-    @FXML
-    private javafx.scene.layout.HBox panelSconto;
+    @FXML private Button btnAggiungiProdotto;
+    @FXML private Button btnRimuoviProdotto;
+    @FXML private Button btnApplicaVoucher;
+    @FXML private Button btnRimuoviVoucher;
+    @FXML private Button btnConfermaOrdine;
+    @FXML private Button btnAnnullaOrdine;
+
+    @FXML private javafx.scene.layout.HBox panelSconto;
 
     private CreaOrdineFacade facade;
     private List<FoodBean> prodottiBaseDisponibili;
@@ -86,40 +67,39 @@ public class CreaOrdineGUIController  implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        facade = CreaOrdineFacade.getInstance();
         righeOrdineObservable = FXCollections.observableArrayList();
 
-        setupTabella();
-        setupListeners();
-
         try {
+            setupTabella();
+            setupListeners();
             caricaDatiIniziali();
+
+            // Verifica che l'utente sia loggato
+            String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
+            if (tokenKey == null) {
+                logger.severe("Utente non loggato - token null");
+                mostraErrore("Errore di sessione", "Devi effettuare il login per creare un ordine.");
+                return;
+            }
+
+            facade = new CreaOrdineFacade(tokenKey);
             iniziaNuovoOrdine();
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
-            logger.log(Level.WARNING, "DB non disponibile, uso dati mock: " + e.getMessage());
-            caricaDatiMock();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Errore generico nell'inizializzazione", e);
+
+        } catch (MissingAuthorizationException e) {
+            logger.severe("Errore di autorizzazione: " + e.getMessage());
+            mostraErrore("Errore di autorizzazione", e.getMessage());
+        } catch (CreaOrdineException e) {
+            logger.severe("Errore di inizializzazione ordine: " + e.getMessage());
             mostraErrore("Errore di inizializzazione", e.getMessage());
+        } catch (NullPointerException e) {
+            logger.severe("Sessione utente non valida: " + e.getMessage());
+            mostraErrore("Errore di sessione", "Sessione non valida. Effettua nuovamente il login.");
+        } catch (Exception e) {
+            logger.severe("Errore generico in initialize: " + e.getMessage());
+            mostraErrore("Errore", "Errore durante l'inizializzazione: " + e.getMessage());
         }
     }
 
-    private void caricaDatiMock() {
-        // Dati di test per quando il DB non è disponibile
-        List<String> prodottiMock = List.of(
-                "Kebab Classico - €5.00",
-                "Kebab XL - €7.50",
-                "Piadina Kebab - €6.00"
-        );
-        comboProdottoBase.setItems(FXCollections.observableArrayList(prodottiMock));
-        if (!prodottiMock.isEmpty()) {
-            comboProdottoBase.getSelectionModel().selectFirst();
-        }
-
-        // Inizializza una lista vuota di prodotti base per evitare NullPointerException
-        prodottiBaseDisponibili = new ArrayList<>();
-        addOnDisponibili = new ArrayList<>();
-    }
 
 
     private void setupTabella() {
@@ -134,6 +114,12 @@ public class CreaOrdineGUIController  implements Initializable {
     }
 
     private void setupListeners() {
+        baseGroup = new ToggleGroup();
+        radioPanino.setToggleGroup(baseGroup);
+        radioPiadina.setToggleGroup(baseGroup);
+        radioPiatto.setToggleGroup(baseGroup);
+        radioPanino.setSelected(true);
+
         tabellaOrdine.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> btnRimuoviProdotto.setDisable(newSelection == null)
         );
@@ -152,83 +138,101 @@ public class CreaOrdineGUIController  implements Initializable {
         }
     }
 
-    private void caricaDatiIniziali() throws CreaOrdineFacade.CreaOrdineException {
-        // Solo facade: nessun mock qui, nessun accesso diretto a DAO
-        prodottiBaseDisponibili = facade.getMenuProdottiBase();
-        addOnDisponibili = facade.getMenuAddOn();
+    private void caricaDatiIniziali() {
+        prodottiBaseDisponibili = List.of(
+                new FoodBean(null, "Panino Doner Kebab", 5.50, 5, "BASE", "PaninoDonerKebab"),
+                new FoodBean(null, "Piadina Doner Kebab", 6.00, 6, "BASE", "PiadinaDonerKebab"),
+                new FoodBean(null, "Kebab al Piatto", 8.00, 8, "BASE", "KebabAlPiatto")
+        );
 
-        List<String> nomiProdotti = new ArrayList<>();
-        for (FoodBean fb : prodottiBaseDisponibili) {
-            nomiProdotti.add(fb.getDescrizione() + " - €" + String.format("%.2f", fb.getCosto()));
-        }
-        comboProdottoBase.setItems(FXCollections.observableArrayList(nomiProdotti));
-        if (!nomiProdotti.isEmpty()) {
-            comboProdottoBase.getSelectionModel().selectFirst();
+        addOnDisponibili = List.of(
+                new FoodBean(null, "Cipolla", 0.50, 1, "ADDON", "Cipolla"),
+                new FoodBean(null, "Salsa Yogurt", 0.80, 0, "ADDON", "SalsaYogurt"),
+                new FoodBean(null, "Patatine", 2.00, 3, "ADDON", "Patatine"),
+                new FoodBean(null, "Mix Verdure Grigliate", 1.50, 2, "ADDON", "MixVerdureGrigliate")
+        );
+    }
+
+    private FoodBean getProdottoBaseSelezionato() {
+        Toggle selected = baseGroup.getSelectedToggle();
+        if (selected == null) return null;
+        if (selected == radioPanino) return prodottiBaseDisponibili.get(0);
+        if (selected == radioPiadina) return prodottiBaseDisponibili.get(1);
+        if (selected == radioPiatto) return prodottiBaseDisponibili.get(2);
+        return null;
+    }
+
+    private void iniziaNuovoOrdine() throws CreaOrdineException {
+        try {
+            String clienteId = PageNavigationController.getInstance().getSessionTokenKey();
+            OrdineBean ordine = facade.inizializzaNuovoOrdine(clienteId);
+            if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
+                labelNumeroOrdine.setText("Ordine #" + ordine.getNumeroOrdine());
+            }
+            aggiornaRiepilogo();
+        } catch (DAOException | MissingAuthorizationException e) {
+            throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage());
         }
     }
 
-    private void iniziaNuovoOrdine() throws CreaOrdineFacade.CreaOrdineException {
-        OrdineBean ordine = facade.iniziaNuovoOrdine();
-        if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
-            labelNumeroOrdine.setText("Ordine #" + ordine.getNumeroOrdine());
+
+    @FXML
+    private void onRimuoviProdotto() {
+        int selectedIndex = tabellaOrdine.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < 0) {
+            mostraWarning("Selezione richiesta", "Seleziona un prodotto dalla lista da rimuovere.");
+            return;
         }
-        aggiornaRiepilogo();
+
+        RigaOrdineBean rigaSelezionata = tabellaOrdine.getSelectionModel().getSelectedItem();
+        if (!mostraConferma("Conferma rimozione",
+                "Vuoi rimuovere \"" + rigaSelezionata.getDescrizione() + "\" dall'ordine?")) {
+            return;
+        }
+
+        boolean success = facade.rimuoviProdottoDaOrdine(selectedIndex);
+        if (success) {
+            aggiornaRiepilogo();
+        } else {
+            mostraErrore("Errore", "Impossibile rimuovere il prodotto.");
+        }
     }
 
     @FXML
     private void onAggiungiProdotto() {
         try {
-            int selectedIndex = comboProdottoBase.getSelectionModel().getSelectedIndex();
-            if (selectedIndex < 0) {
-                mostraWarning("Selezione richiesta", "Seleziona un prodotto base dal menu.");
+            FoodBean prodottoSelezionato = getProdottoBaseSelezionato();
+            if (prodottoSelezionato == null) {
+                mostraWarning("Selezione richiesta", "Seleziona un prodotto base.");
                 return;
             }
 
-            FoodBean prodottoSelezionato = prodottiBaseDisponibili.get(selectedIndex);
-            FoodBean foodBean = new FoodBean();
-            foodBean.setClasse(prodottoSelezionato.getClasse());
-            foodBean.setDescrizione(prodottoSelezionato.getDescrizione());
-            foodBean.setCosto(prodottoSelezionato.getCosto());
-            foodBean.setDurata(prodottoSelezionato.getDurata());
-            foodBean.setTipo(prodottoSelezionato.getTipo());
+            FoodBean richiesta = new FoodBean();
+            richiesta.setClasse(prodottoSelezionato.getClasse());
+            richiesta.setDescrizione(prodottoSelezionato.getDescrizione());
+            richiesta.setCosto(prodottoSelezionato.getCosto());
+            richiesta.setDurata(prodottoSelezionato.getDurata());
+            richiesta.setTipo(prodottoSelezionato.getTipo());
 
-            if (checkCipolla != null && checkCipolla.isSelected()) foodBean.aggiungiAddOn("Cipolla");
-            if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected()) foodBean.aggiungiAddOn("SalsaYogurt");
-            if (checkPatatine != null && checkPatatine.isSelected()) foodBean.aggiungiAddOn("Patatine");
-            if (checkMixVerdure != null && checkMixVerdure.isSelected()) foodBean.aggiungiAddOn("MixVerdureGrigliate");
+            if (checkCipolla != null && checkCipolla.isSelected()) richiesta.aggiungiAddOn("Cipolla");
+            if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected()) richiesta.aggiungiAddOn("SalsaYogurt");
+            if (checkPatatine != null && checkPatatine.isSelected()) richiesta.aggiungiAddOn("Patatine");
+            if (checkMixVerdure != null && checkMixVerdure.isSelected()) richiesta.aggiungiAddOn("MixVerdureGrigliate");
 
-            RiepilogoOrdineBean riepilogo = facade.aggiungiProdotto(foodBean);
-            aggiornaVistaConRiepilogo(riepilogo);
-            resetSelezioniAddOn();
-            mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
+            boolean success = facade.aggiungiProdottoAOrdine(richiesta);
+            if (success) {
+                aggiornaRiepilogo();
+                resetSelezioniAddOn();
+                mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
+            } else {
+                mostraErrore("Errore", "Impossibile aggiungere il prodotto.");
+            }
 
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
+        } catch (DAOException e) {
             mostraErrore("Errore", e.getMessage());
         }
     }
 
-    @FXML
-    private void onRimuoviProdotto() {
-        try {
-            int selectedIndex = tabellaOrdine.getSelectionModel().getSelectedIndex();
-            if (selectedIndex < 0) {
-                mostraWarning("Selezione richiesta", "Seleziona un prodotto dalla lista da rimuovere.");
-                return;
-            }
-
-            RigaOrdineBean rigaSelezionata = tabellaOrdine.getSelectionModel().getSelectedItem();
-            if (!mostraConferma("Conferma rimozione",
-                    "Vuoi rimuovere \"" + rigaSelezionata.getDescrizione() + "\" dall'ordine?")) {
-                return;
-            }
-
-            RiepilogoOrdineBean riepilogo = facade.rimuoviProdotto(selectedIndex);
-            aggiornaVistaConRiepilogo(riepilogo);
-
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
-            mostraErrore("Errore", e.getMessage());
-        }
-    }
 
     @FXML
     private void onApplicaVoucher() {
@@ -243,18 +247,21 @@ public class CreaOrdineGUIController  implements Initializable {
                 return;
             }
 
-            RiepilogoOrdineBean riepilogo = facade.applicaVoucher(codiceVoucher);
-            aggiornaVistaConRiepilogo(riepilogo);
+            var voucherBean = facade.applicaVoucher(codiceVoucher);
+            if (voucherBean != null) {
+                aggiornaRiepilogo();
+                textFieldVoucher.setDisable(true);
+                btnApplicaVoucher.setDisable(true);
+                btnRimuoviVoucher.setDisable(false);
+                mostraInfo("Voucher applicato", "Voucher " + codiceVoucher.toUpperCase() + " applicato con successo!");
+            } else {
+                mostraErrore("Voucher non valido", "Il codice voucher inserito non è valido.");
+                textFieldVoucher.selectAll();
+                textFieldVoucher.requestFocus();
+            }
 
-            textFieldVoucher.setDisable(true);
-            btnApplicaVoucher.setDisable(true);
-            btnRimuoviVoucher.setDisable(false);
-
-            mostraInfo("Voucher applicato",
-                    "Voucher " + codiceVoucher.toUpperCase() + " applicato con successo!\n" +
-                            "Sconto: " + riepilogo.getScontoFormattato());
-
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
+        } catch (DAOException | ObjectNotFoundException | MissingAuthorizationException |
+                 WrongListQueryIdentifierValue | UserNotFoundException | UnrecognizedRoleException e) {
             mostraErrore("Voucher non valido", e.getMessage());
             textFieldVoucher.selectAll();
             textFieldVoucher.requestFocus();
@@ -263,22 +270,20 @@ public class CreaOrdineGUIController  implements Initializable {
 
     @FXML
     private void onRimuoviVoucher() {
-        try {
+
             if (!mostraConferma("Rimuovi Voucher", "Vuoi rimuovere il voucher applicato?")) {
                 return;
             }
 
-            RiepilogoOrdineBean riepilogo = facade.rimuoviVoucher();
-            aggiornaVistaConRiepilogo(riepilogo);
+            facade.rimuoviVoucher();
+            aggiornaRiepilogo();
 
             textFieldVoucher.setDisable(false);
             textFieldVoucher.clear();
             btnApplicaVoucher.setDisable(true);
             btnRimuoviVoucher.setDisable(true);
 
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
-            mostraErrore("Errore", e.getMessage());
-        }
+
     }
 
     @FXML
@@ -289,7 +294,7 @@ public class CreaOrdineGUIController  implements Initializable {
                 return;
             }
 
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogo();
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
             String messaggioConferma = costruisciMessaggioConferma(riepilogo);
 
             if (!mostraConferma("Conferma Ordine", messaggioConferma)) {
@@ -307,7 +312,7 @@ public class CreaOrdineGUIController  implements Initializable {
                 mostraErrore("Errore", "Si è verificato un errore durante la conferma dell'ordine.");
             }
 
-        } catch (CreaOrdineFacade.CreaOrdineException e) {
+        } catch (DAOException | MissingAuthorizationException e) {
             mostraErrore("Errore", e.getMessage());
         }
     }
@@ -327,14 +332,14 @@ public class CreaOrdineGUIController  implements Initializable {
             try {
                 resetVistaCompleta();
                 iniziaNuovoOrdine();
-            } catch (CreaOrdineFacade.CreaOrdineException e) {
+            } catch (CreaOrdineException e) {
                 mostraErrore("Errore", e.getMessage());
             }
         }
     }
 
-    private void aggiornaRiepilogo() throws CreaOrdineFacade.CreaOrdineException {
-        RiepilogoOrdineBean riepilogo = facade.getRiepilogo();
+    private void aggiornaRiepilogo()  {
+        RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
         aggiornaVistaConRiepilogo(riepilogo);
     }
 
@@ -376,9 +381,7 @@ public class CreaOrdineGUIController  implements Initializable {
 
     private void resetVistaCompleta() {
         resetSelezioniAddOn();
-        if (comboProdottoBase.getItems() != null && !comboProdottoBase.getItems().isEmpty()) {
-            comboProdottoBase.getSelectionModel().selectFirst();
-        }
+        radioPanino.setSelected(true);
 
         textFieldVoucher.clear();
         textFieldVoucher.setDisable(false);
@@ -403,9 +406,9 @@ public class CreaOrdineGUIController  implements Initializable {
         StringBuilder sb = new StringBuilder();
         sb.append("Riepilogo Ordine #").append(riepilogo.getNumeroOrdine()).append("\n\n");
         sb.append("Prodotti:\n");
-        for (RigaOrdineBean riga : riepilogo.getRigheOrdine()) {
-            sb.append("• ").append(riga.getDescrizione())
-                    .append(" - ").append(riga.getPrezzoFormattato()).append("\n");
+        for (RigaOrdineBean r : riepilogo.getRigheOrdine()) {
+            sb.append("• ").append(r.getDescrizione())
+                    .append(" - ").append(r.getPrezzoFormattato()).append("\n");
         }
         sb.append("\nSubtotale: ").append(riepilogo.getSubtotaleFormattato()).append("\n");
         if (riepilogo.isVoucherApplicato()) {

@@ -134,19 +134,14 @@ public final class PageNavigationController {
      * @param pageName the name of the view (without the '.fxml' suffix) to be displayed
      */
     public void navigateTo(String pageName) {
-        if (baseGraphicController == null) {
-            logger.log(Level.WARNING, "baseGraphicController è NULL! Uso navigateToFXML come fallback per: " + pageName);
-            navigateToFXML(pageName);
-            return;
-        }
-        if (!pageName.endsWith(FILE_EXTENSION))
-            pageName = pageName.concat(FILE_EXTENSION);
         try {
-            baseGraphicController.switchTo(
-                    FXMLLoader.load(Objects.requireNonNull(PageNavigationController.class.getResource(pageName))));
+            String resourcePath = "/org/example/" + pageName + FILE_EXTENSION; // FILE_EXTENSION = ".fxml"
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
+            Parent view = loader.load();
+            setContent(view);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Errore caricamento risorsa: " + pageName, e);
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+            logger.severe("Errore caricando la pagina: " + pageName + " -> " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore di navigazione", "Impossibile aprire la pagina: " + pageName);
         }
     }
 
@@ -166,8 +161,14 @@ public final class PageNavigationController {
         baseGraphicController.returnToMainPage();
     }
 
-    public String getSessionTokenKey() {
-        return this.userData.getSessionTokenKey();
+    public String getSessionTokenKey()
+    {
+        if (userData == null) {
+            return null;
+        }
+
+    return this.userData.getSessionTokenKey();
+
     }
 
     public void setSessionTokenKey(String sessionTokenKey) {

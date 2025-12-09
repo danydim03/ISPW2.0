@@ -16,10 +16,8 @@ public class ClienteHomepageGraphicController {
     @FXML
     void handleNuovoOrdine(ActionEvent event) {
         logger.log(Level.INFO, "Navigazione verso Crea Ordine");
-        // Usa navigateToFXML che cerca in /org/example/
-        PageNavigationController.getInstance().navigateToFXML("CreaOrdineView");
+        PageNavigationController.getInstance().navigateTo("CreaOrdineView");
     }
-
 
     @FXML
     void handleStoricoOrdini(ActionEvent event) {

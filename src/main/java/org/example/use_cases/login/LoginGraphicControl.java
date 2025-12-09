@@ -49,36 +49,36 @@ public class LoginGraphicControl implements Initializable {
         final String email = this.emailField.getText();
         final String password = this.passwordField.getText();
         
-        // SHORTCUT TEMPORANEO - Apri direttamente homepage_Cliente2.fxml
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/homepage_Cliente2.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+//        // SHORTCUT TEMPORANEO - Apri direttamente homepage_Cliente2.fxml
 //        try {
-//            loginController.emailMatches(email);
-//            LoginBean loginBean = loginController.login(email, password);
-//            PageNavigationController.getInstance().openMainPage(loginBean.getTokenKey(), loginBean.getUserBean());
-//        } catch (EmailFormatException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message, e);
-//        } catch (UserNotFoundException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message, e);
-//        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
-//                 WrongListQueryIdentifierValue e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
-//        } catch (WrongPasswordException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message, e);
-//        } catch (MissingAuthorizationException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MISSING_AUTHORIZATION_MSG.message, e);
-//        } catch (PropertyException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.PROPERTY_VALUE_TITLE.message, UserErrorMessagesEnum.PROPERTY_VALUE_MSG.message, e);
-//        } catch (ResourceNotFoundException e) {
-//            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/homepage_Cliente2.fxml"));
+//            Parent root = loader.load();
+//            Stage stage = (Stage) emailField.getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
+
+        try {
+            loginController.emailMatches(email);
+            LoginBean loginBean = loginController.login(email, password);
+            PageNavigationController.getInstance().openMainPage(loginBean.getTokenKey(), loginBean.getUserBean());
+        } catch (EmailFormatException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message, e);
+        } catch (UserNotFoundException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message, e);
+        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
+                 WrongListQueryIdentifierValue e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
+        } catch (WrongPasswordException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message, e);
+        } catch (MissingAuthorizationException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MISSING_AUTHORIZATION_MSG.message, e);
+        } catch (PropertyException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.PROPERTY_VALUE_TITLE.message, UserErrorMessagesEnum.PROPERTY_VALUE_MSG.message, e);
+        } catch (ResourceNotFoundException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+        }
     }
 }
