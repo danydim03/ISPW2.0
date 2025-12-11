@@ -1,34 +1,33 @@
+
 package org.example.model.user;
 
-import  org.example.enums.ExceptionMessagesEnum;
-import  org.example.enums.UserRoleEnum;
-import  org.example.exceptions.UserNotFoundException;
-import  org.example.exceptions.DAOException;
-import  org.example.exceptions.PropertyException;
-import  org.example.exceptions.ResourceNotFoundException;
-import  org.example.exceptions.UnrecognizedRoleException;
-import  org.example.exceptions.ObjectNotFoundException;
-import  org.example.exceptions.MissingAuthorizationException;
-
-import  org.example.exceptions.WrongListQueryIdentifierValue;
-
-import  org.example.instances_management_abstracts.DAODBAbstract;
-import org.example.model.role.Amministratore.Amministratore;
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.enums.UserRoleEnum;
+import org.example.exceptions.UserNotFoundException;
+import org.example.exceptions.DAOException;
+import org.example.exceptions.PropertyException;
+import org.example.exceptions.ResourceNotFoundException;
+import org.example.exceptions.UnrecognizedRoleException;
+import org.example.exceptions.ObjectNotFoundException;
+import org.example.exceptions.MissingAuthorizationException;
+import org.example.exceptions.WrongListQueryIdentifierValue;
+import org.example.instances_management_abstracts.DAODBAbstract;
 import org.example.model.role.Amministratore.AmministratoreLazyFactory;
 import org.example.model.role.Cliente.ClienteLazyFactory;
-import org.example.model.role.Kebabbaro.Kebabbaro;
 import org.example.model.role.Kebabbaro.KebabbaroLazyFactory;
-
-
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  {
-    private static final   String EMAIL = "email";
-    private static final  String ID = "ID";
+public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface {
+    private static final Logger LOGGER = Logger.getLogger(UserDAODB.class.getName());
+
+    private static final String EMAIL = "email";
+    private static final String ID = "ID";
     protected static UserDAOInterface instance;
 
     private UserDAODB() {
@@ -42,6 +41,26 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
         return instance;
     }
 
+    // Metodo helper per testare l'esistenza tramite email
+    public boolean existsUserByEmailSafe(String email) {
+        try {
+            User u = getUserByEmail(email);
+            if (u != null) {
+                LOGGER.info("Utente trovato: " + u.getID() + " (" + email + ")");
+                return true;
+            } else {
+                LOGGER.info("getUserByEmail ha restituito null per: " + email);
+                return false;
+            }
+        } catch (UserNotFoundException e) {
+            LOGGER.info("Utente non trovato: " + email);
+            return false;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Errore eseguendo getUserByEmail per: " + email, e);
+            return false;
+        }
+    }
+
     @Override
     public User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
@@ -53,17 +72,14 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public User getUserByID(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public User getUserByID(String ID) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
                 List.of(ID),
-                List.of(codiceFiscale),
+                List.of(ID),
                 null
         );
     }
-
-
-
 
     @Override
     protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
@@ -75,7 +91,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
                 rs.getString("password"),
                 rs.getDate("registration_date").toLocalDate()
         );
-        setUserRoleByRoleEnum(user,UserRoleEnum.getUserRoleByType(rs.getInt("role")));
+        setUserRoleByRoleEnum(user, UserRoleEnum.getUserRoleByType(rs.getInt("role")));
         return user;
     }
 
@@ -88,7 +104,7 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     public void insert(User user) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 "USER",
-                List.of(user.getID(), user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(),user.getRole().getRoleEnumType().type)
+                List.of(user.getID(), user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(), user.getRole().getRoleEnumType().type)
         );
     }
 
@@ -105,8 +121,8 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     public void update(User user) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
         updateQuery(
                 "USER",
-                List.of( "name", "surname", "password", "registration_date", EMAIL, "role"),
-                List.of(user.getName(),user.getSurname(),user.getPassword(),Date.valueOf(user.getRegistrationDate()),user.getEmail(),user.getRole().getRoleEnumType().type),
+                List.of("name", "surname", "password", "registration_date", EMAIL, "role"),
+                List.of(user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(), user.getRole().getRoleEnumType().type),
                 List.of(ID),
                 List.of(user.getID()));
     }

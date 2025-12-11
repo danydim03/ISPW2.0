@@ -54,8 +54,8 @@ public class UserLazyFactory {
         return daoUser;
     }
 
-    public User newUser(String name, String surname, String codiceFiscale, String email, String password, LocalDate registrationDate) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
-        User newUser = new User(name, surname, codiceFiscale, email, password, registrationDate);
+    public User newUser(String name, String surname, String ID, String email, String password, LocalDate registrationDate) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+        User newUser = new User(name, surname, ID, email, password, registrationDate);
             DAOFactoryAbstract.getInstance().getUserDAO().insert(newUser);
             registeredUsers.add(newUser);
             return newUser;
