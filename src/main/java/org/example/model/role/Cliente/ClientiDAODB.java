@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOInterface {
     private static final String CLIENTE ="CLIENTE";
-    private static final String CODICE ="ID";
+    private static final String CODICE ="codice_fiscale";
     
     protected static ClienteDAOInterface instance;
 
@@ -37,11 +37,12 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
      */
     @Override
     public Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+        System.out.println("DEBUG: Cerco Cliente con ID = '" + user.getCodiceFiscale() + "'");
         return getQuery(
                 CLIENTE, // da cambiare
 
                 List.of(CODICE),
-                List.of(user.getID()),
+                List.of(user.getCodiceFiscale()),
                 List.of(user)
         );
     }
@@ -59,7 +60,7 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
         deleteQuery(
                 CLIENTE,
                 List.of(CODICE),
-                List.of(cliente.getID())
+                List.of(cliente.getCodiceFiscale())
         );
     }
 

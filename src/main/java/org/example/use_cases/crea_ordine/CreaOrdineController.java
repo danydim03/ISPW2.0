@@ -1,6 +1,7 @@
 package org.example.use_cases.crea_ordine;
 
 import org.example.exceptions.*;
+import org.example.exceptions.VoucherNotValidException;
 import org.example.model.food.*;
 import org.example.model. food.Decorator.*;
 import org.example.model. ordine. Ordine;
@@ -82,12 +83,21 @@ public class CreaOrdineController {
         }
         
         // Crea il prodotto base
+        // Factory Method
+        // (potrebbe essere esteso per supportare più tipi di prodotti)
+        // (ad esempio, usando reflection o una mappa di classi)
+        // Qui usiamo un semplice switch-case per l'esempio
+        // Crea il prodotto base
         Food prodotto = creaProdottoBase(foodBean. getClasse());
         if (prodotto == null) {
             return false;
         }
         
         // Applica gli add-on usando il pattern Decorator
+        // Itera sulla lista delle classi degli add-on selezionati
+        // e avvolgi il prodotto con i decorator corrispondenti
+        // Decorator Pattern
+        // (potrebbe essere esteso per supportare più add-on)
         for (String addOnClasse : foodBean.getAddOnSelezionati()) {
             prodotto = applicaDecorator(prodotto, addOnClasse);
         }
@@ -121,7 +131,7 @@ public class CreaOrdineController {
      * @param codiceVoucher il codice del voucher da applicare
      * @return VoucherBean con i dati del voucher applicato, null se non valido
      */
-    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException, 
+    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
         
         if (ordineCorrente == null || codiceVoucher == null || codiceVoucher.trim().isEmpty()) {

@@ -1,4 +1,4 @@
-package org.example.use_cases.crea_ordine.beans;
+package org.example.model.user;
 
 
 public class UserData {

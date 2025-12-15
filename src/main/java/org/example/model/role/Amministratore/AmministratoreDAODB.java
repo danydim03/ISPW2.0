@@ -31,7 +31,7 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
         return getQuery(
                 AMMINISTRATORE,
                 List.of(CODICE),
-                List.of(user.getID()),
+                List.of(user.getCodiceFiscale()),
                 List.of(user)
         );
     }
@@ -41,7 +41,7 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
         insertQuery(
                 AMMINISTRATORE,
                 List.of(
-                        amministratore.getUser().getID(),
+                        amministratore.getUser().getCodiceFiscale(),
                         amministratore.getDepartment(),
                         amministratore.getAccessLevel()
                 )
@@ -53,7 +53,7 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
         deleteQuery(
                 AMMINISTRATORE,
                 List.of(CODICE),
-                List.of(amministratore.getUser().getID())
+                List.of(amministratore.getUser().getCodiceFiscale())
         );
     }
 
@@ -64,7 +64,7 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
                 List.of(DEPARTMENT, ACCESS_LEVEL),
                 List.of(amministratore.getDepartment(), amministratore.getAccessLevel()),
                 List.of(CODICE),
-                List.of(amministratore.getUser().getID())
+                List.of(amministratore.getUser().getCodiceFiscale())
         );
     }
 

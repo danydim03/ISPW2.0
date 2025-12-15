@@ -68,10 +68,14 @@ public class LoginGraphicControl implements Initializable {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message, e);
         } catch (UserNotFoundException e) {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message, e);
-        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
-                 WrongListQueryIdentifierValue e) {
+        }
+        catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
+               WrongListQueryIdentifierValue e) {
+            // Stampa lo stack trace completo per vedere l'origine dell'errore
+            e.printStackTrace();  // <-- AGGIUNGI QUESTA RIGA
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
-        } catch (WrongPasswordException e) {
+        }
+        catch (WrongPasswordException e) {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message, e);
         } catch (MissingAuthorizationException e) {
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MISSING_AUTHORIZATION_MSG.message, e);

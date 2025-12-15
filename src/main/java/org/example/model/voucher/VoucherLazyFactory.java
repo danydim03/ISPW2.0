@@ -23,6 +23,7 @@ public class VoucherLazyFactory {
         return instance;
     }
 
+
     public Voucher getVoucherById(Long id) throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
 

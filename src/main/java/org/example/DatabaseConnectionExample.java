@@ -1,8 +1,40 @@
 package org.example;
 
-import java.sql.*;
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.enums.UserRoleEnum;
+import org.example.exceptions.*;
+import org.example.model.user.User;
+import org.example.model.user.UserDAOInterface;
 
-public class DatabaseConnectionExample {
+
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.enums.UserRoleEnum;
+import org.example.exceptions.UserNotFoundException;
+import org.example.exceptions.DAOException;
+import org.example.exceptions.PropertyException;
+import org.example.exceptions.ResourceNotFoundException;
+import org.example.exceptions.UnrecognizedRoleException;
+import org.example.exceptions.ObjectNotFoundException;
+import org.example.exceptions.MissingAuthorizationException;
+import org.example.exceptions.WrongListQueryIdentifierValue;
+import org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.role.Amministratore.AmministratoreLazyFactory;
+import org.example.model.role.Cliente.ClienteLazyFactory;
+import org.example.model.role.Kebabbaro.KebabbaroLazyFactory;
+
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.*;
+import java.util.List;
+
+ public abstract class DatabaseConnectionExample extends DAODBAbstract<User> implements UserDAOInterface {
+
+
+
 
     public static void main(String[] args) {
         // Parametri di connessione
@@ -45,5 +77,22 @@ public class DatabaseConnectionExample {
             System.err.println("Errore connessione DB: " + e.getMessage());
             e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

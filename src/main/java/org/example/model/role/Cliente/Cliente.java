@@ -21,7 +21,12 @@ public class Cliente extends AbstractRole {
 
     }
 
-    public String getID() {
+
+    @Override
+    public Cliente getClienteRole() {
+        return this;
+    }
+    public String getCodiceFiscale() {
         return ID;
     }
 

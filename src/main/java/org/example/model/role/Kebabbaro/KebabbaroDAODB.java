@@ -30,7 +30,7 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
         return getQuery(
                 KEBABBARO,
                 List.of(CODICE),
-                List.of(user.getID()),
+                List.of(user.getCodiceFiscale()),
                 List.of(user)
         );
     }
@@ -39,7 +39,7 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
     public void insert(Kebabbaro kebabbaro) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 KEBABBARO,
-                List.of(kebabbaro.getUser().getID())
+                List.of(kebabbaro.getUser().getCodiceFiscale())
         );
     }
 
@@ -48,7 +48,7 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
         deleteQuery(
                 KEBABBARO,
                 List.of(CODICE),
-                List.of(kebabbaro.getUser().getID())
+                List.of(kebabbaro.getUser().getCodiceFiscale())
         );
     }
 
@@ -59,7 +59,7 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
                 List.of(),
                 List.of(),
                 List.of(CODICE),
-                List.of(kebabbaro.getUser().getID())
+                List.of(kebabbaro.getUser().getCodiceFiscale())
         );
     }
 

@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.StackPane;
-import org.example.use_cases.crea_ordine.beans.UserData;
+import org.example.model.user.UserData;
 
 import java.io.IOException;
 import java.net.URL;

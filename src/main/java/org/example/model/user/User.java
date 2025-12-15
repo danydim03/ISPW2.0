@@ -6,20 +6,20 @@ import org.example.model.role.AbstractRole;
 
 import java.time.LocalDate;
 
+
 public class User {
-    private String ID;
     private String name;
     private String surname;
-    private String codice_fiscale;
+    private String codiceFiscale;
     private String email;
     private String password;
     private LocalDate registrationDate;
     private AbstractRole role;
 
-    protected User(String name, String surname, String ID, String email, String password, LocalDate registrationDate) {
+    protected User(String name, String surname, String codiceFiscale, String email, String password, LocalDate registrationDate) {
         this.name = name;
         this.surname = surname;
-        this.ID = ID;
+        this.codiceFiscale = codiceFiscale;
         this.email = email;
         this.password = password;
         this.registrationDate = registrationDate;
@@ -41,12 +41,12 @@ public class User {
         this.surname = surname;
     }
 
-    public String getID(){
-        return ID;
+    public String getCodiceFiscale(){
+        return codiceFiscale;
     }
 
-    public void setID(String ID){
-        this.ID = this.ID;
+    public void setCodiceFiscale(String codiceFiscale){
+        this.codiceFiscale = codiceFiscale;
     }
 
     public String getEmail(){
@@ -104,7 +104,7 @@ public class User {
                 && user.getEmail().equals(email)
                 && user.getName().equals(name)
                 && user.getSurname().equals(surname)
-                && user.getID().equals(ID)
+                && user.getCodiceFiscale().equals(codiceFiscale)
                 && user.getPassword().equals(password);
     }
 }

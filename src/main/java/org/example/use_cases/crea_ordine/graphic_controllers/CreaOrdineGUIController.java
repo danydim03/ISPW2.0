@@ -101,7 +101,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     }
 
 
-
+// Imposta le colonne della tabella e il placeholder
     private void setupTabella() {
         colonnaDescrizione.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         colonnaPrezzo.setCellValueFactory(new PropertyValueFactory<>("prezzoFormattato"));
@@ -112,7 +112,9 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         tabellaOrdine.setItems(righeOrdineObservable);
         tabellaOrdine.setPlaceholder(new Label("Nessun prodotto nell'ordine"));
     }
-
+// Imposta i listener per i componenti UI
+    // Configura i gruppi di toggle, i listener per la selezione della tabella e i campi di testo
+    // Inizializza lo stato dei pulsanti e dei pannelli
     private void setupListeners() {
         baseGroup = new ToggleGroup();
         radioPanino.setToggleGroup(baseGroup);
@@ -137,6 +139,10 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             panelSconto.setManaged(false);
         }
     }
+
+    //è solo di esempio, i dati reali dovrebbero essere caricati dal database, tramite il facade.
+    // In questo esempio, i dati sono hardcoded per semplicità.
+    // In un'applicazione reale, questi dati dovrebbero essere recuperati tramite chiamate al database.
 
     private void caricaDatiIniziali() {
         prodottiBaseDisponibili = List.of(
@@ -164,8 +170,8 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
     private void iniziaNuovoOrdine() throws CreaOrdineException {
         try {
-            String clienteId = PageNavigationController.getInstance().getSessionTokenKey();
-            OrdineBean ordine = facade.inizializzaNuovoOrdine(clienteId);
+            String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
+            OrdineBean ordine = facade.inizializzaNuovoOrdine(tokenKey);
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
                 labelNumeroOrdine.setText("Ordine #" + ordine.getNumeroOrdine());
             }
@@ -198,6 +204,11 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
+    // Aggiunge il prodotto selezionato con gli add-on scelti all'ordine
+    // Recupera il prodotto base selezionato e crea un nuovo FoodBean per la richiesta
+    // Aggiunge gli add-on selezionati al FoodBean della richiesta
+    // Chiama il facade per aggiungere il prodotto all'ordine e aggiorna la vista
+    // Mostra messaggi di errore o conferma in base al risultato
     @FXML
     private void onAggiungiProdotto() {
         try {
@@ -233,6 +244,11 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
+// Applica un voucher all'ordine
+// Recupera il codice voucher dal campo di testo
+// Verifica che il codice non sia vuoto e che l'ordine non sia vuoto
+// Chiama il facade per applicare il voucher e aggiorna la vista
+// Mostra messaggi di errore o conferma in base al risultato
 
     @FXML
     private void onApplicaVoucher() {
@@ -289,11 +305,14 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     @FXML
     private void onConfermaOrdine() {
         try {
+            // Verifica che l'ordine non sia vuoto
             if (righeOrdineObservable.isEmpty()) {
                 mostraWarning("Ordine vuoto", "Aggiungi almeno un prodotto all'ordine prima di confermare.");
                 return;
             }
-
+            // Costruisce il riepilogo dell'ordine e mostra la conferma
+            // Se l'utente conferma, chiama il facade per confermare l'ordine
+            // Mostra messaggi di conferma o errore in base al risultato
             RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
             String messaggioConferma = costruisciMessaggioConferma(riepilogo);
 

@@ -41,8 +41,7 @@ public class CreaOrdineFacade {
         return controller.rimuoviProdottoDaOrdine(index);
     }
 
-    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException,MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
         return controller.applicaVoucher(codiceVoucher);
     }
 

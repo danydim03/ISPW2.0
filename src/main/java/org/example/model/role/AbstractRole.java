@@ -25,8 +25,8 @@ public abstract class AbstractRole {
         this.user = user;
     }
 
-    public String getID(){
-        return user.getID();
+    public String getCodiceFiscale(){
+        return user.getCodiceFiscale();
     }
 
     public Cliente getClienteRole() throws MissingAuthorizationException {
