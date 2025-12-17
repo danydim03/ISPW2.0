@@ -42,6 +42,7 @@ public class DAOFactoryDB extends DAOFactoryAbstract {
         return VoucherDAODB.getInstance();
     }
 
+
     @Override
     public OrdineDAOInterface getOrdineDAO() {
         return OrdineDAODB.getInstance();

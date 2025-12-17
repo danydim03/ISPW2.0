@@ -46,19 +46,13 @@ public class LoginGraphicControl implements Initializable {
      * Executes login graphical operation
      */
     public void login() {
+        //da reinserire
         final String email = this.emailField.getText();
         final String password = this.passwordField.getText();
-        
-//        // SHORTCUT TEMPORANEO - Apri direttamente homepage_Cliente2.fxml
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/homepage_Cliente2.fxml"));
-//            Parent root = loader.load();
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            stage.setScene(new Scene(root));
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+//        // solo per testare la grafica senza dover inserire ogni volta le credenziali
+//        final String email = "mario.rossi@example.com";
+//        final String password = "hash-password";
 
         try {
             loginController.emailMatches(email);
@@ -71,8 +65,6 @@ public class LoginGraphicControl implements Initializable {
         }
         catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
                WrongListQueryIdentifierValue e) {
-            // Stampa lo stack trace completo per vedere l'origine dell'errore
-            e.printStackTrace();  // <-- AGGIUNGI QUESTA RIGA
             PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
         }
         catch (WrongPasswordException e) {

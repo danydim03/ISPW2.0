@@ -37,11 +37,12 @@ public class OrdineLazyFactory {
      *
      * @param numeroOrdine il numero dell'ordine
      * @return l'oggetto Ordine
-     * @throws DAOException errori durante l'accesso al persistence layer
+     * @throws DAOException            errori durante l'accesso al persistence layer
      * @throws ObjectNotFoundException se l'ordine non viene trovato
      */
     public Ordine getOrdineByNumero(Long numeroOrdine) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         // Cerca prima nella cache
         for (Ordine o : ordiniCache) {
@@ -56,7 +57,7 @@ public class OrdineLazyFactory {
             ordiniCache.add(daoOrdine);
             return daoOrdine;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -68,21 +69,22 @@ public class OrdineLazyFactory {
      * @throws DAOException errori durante l'accesso al persistence layer
      */
     public List<Ordine> getOrdiniByCliente(String clienteId) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         try {
             List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByCliente(clienteId);
 
             // Aggiorna cache
             for (Ordine ordine : ordini) {
-                if (! isOrdineInCache(ordine. getNumeroOrdine())) {
-                    ordiniCache. add(ordine);
+                if (!isOrdineInCache(ordine.getNumeroOrdine())) {
+                    ordiniCache.add(ordine);
                 }
             }
 
             return ordini;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO. message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -94,10 +96,11 @@ public class OrdineLazyFactory {
      * @throws DAOException errori durante l'accesso al persistence layer
      */
     public List<Ordine> getOrdiniByStato(StatoOrdine stato) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         try {
-            List<Ordine> ordini = DAOFactoryAbstract.getInstance(). getOrdineDAO().getOrdiniByStato(stato);
+            List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByStato(stato);
 
             // Aggiorna cache
             for (Ordine ordine : ordini) {
@@ -108,7 +111,7 @@ public class OrdineLazyFactory {
 
             return ordini;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -116,7 +119,8 @@ public class OrdineLazyFactory {
 
     /**
      * Crea un nuovo ordine per un cliente.
-     * L'ordine viene creato in stato IN_CREAZIONE e NON viene ancora salvato nel DB.
+     * L'ordine viene creato in stato IN_CREAZIONE e NON viene ancora salvato nel
+     * DB.
      *
      * @param clienteId l'ID del cliente
      * @return il nuovo Ordine creato
@@ -136,7 +140,7 @@ public class OrdineLazyFactory {
             return ordine;
 
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO. message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -151,26 +155,24 @@ public class OrdineLazyFactory {
      */
     public void salvaOrdine(Ordine ordine) throws DAOException, MissingAuthorizationException {
         try {
-            // Verifica se l'ordine esiste già nel DB
-            boolean esisteNelDb = false;
-            try {
-                DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdineByNumero(ordine.getNumeroOrdine());
-                esisteNelDb = true;
-            } catch (ObjectNotFoundException e) {
-                esisteNelDb = false;
-            }
+            // Inserisci direttamente l'ordine (è nuovo, generato con un numero univoco)
+            System.out.println("[DEBUG] Tentativo di salvare ordine #" + ordine.getNumeroOrdine());
+            System.out.println("[DEBUG] ClienteId: " + ordine.getClienteId());
+            System.out.println("[DEBUG] Stato: " + ordine.getStato());
+            System.out.println("[DEBUG] Totale: " + ordine.getTotale());
 
-            if (esisteNelDb) {
-                // Aggiorna
-                DAOFactoryAbstract.getInstance().getOrdineDAO().update(ordine);
-            } else {
-                // Inserisci
-                DAOFactoryAbstract.getInstance().getOrdineDAO().insert(ordine);
-            }
+            DAOFactoryAbstract.getInstance().getOrdineDAO().insert(ordine);
+            System.out.println("[DEBUG] Ordine salvato con successo!");
 
-        } catch (PropertyException | ResourceNotFoundException | UserNotFoundException |
-                 UnrecognizedRoleException | WrongListQueryIdentifierValue e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
+        } catch (DAOException e) {
+            System.err.println("[DEBUG ERROR - DAOException] " + e.getMessage());
+            e.printStackTrace();
+            throw e; // Rilancia l'eccezione originale
+        } catch (PropertyException | ResourceNotFoundException e) {
+            System.err.println("[DEBUG ERROR] Errore durante il salvataggio: " + e.getClass().getSimpleName() + " - "
+                    + e.getMessage());
+            e.printStackTrace();
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -184,7 +186,7 @@ public class OrdineLazyFactory {
         try {
             DAOFactoryAbstract.getInstance().getOrdineDAO().update(ordine);
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -196,7 +198,7 @@ public class OrdineLazyFactory {
      */
     public void eliminaOrdine(Ordine ordine) throws DAOException {
         try {
-            DAOFactoryAbstract.getInstance(). getOrdineDAO().delete(ordine);
+            DAOFactoryAbstract.getInstance().getOrdineDAO().delete(ordine);
             ordiniCache.remove(ordine);
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
@@ -209,7 +211,8 @@ public class OrdineLazyFactory {
      * Verifica se un ordine è già presente nella cache.
      */
     private boolean isOrdineInCache(Long numeroOrdine) {
-        if (numeroOrdine == null) return false;
+        if (numeroOrdine == null)
+            return false;
         for (Ordine o : ordiniCache) {
             if (o.getNumeroOrdine() != null && o.getNumeroOrdine().equals(numeroOrdine)) {
                 return true;

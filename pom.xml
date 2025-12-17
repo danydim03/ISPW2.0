@@ -42,6 +42,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+
+        <!-- JavaFX Web -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -57,26 +64,17 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>org.example.Main</mainClass>
-                    <options>
-                        <option>--add-modules</option>
-                        <option>javafx.controls,javafx.fxml,javafx.web</option>
-                    </options>
-                </configuration>
-            </plugin>
-
             <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.example.JAVAFX.KebabInterface</mainClass>
+                    <mainClass>org.example.MainApplication</mainClass>
+                    <options>
+                        <option>--add-modules</option>
+                        <option>javafx.controls,javafx.fxml,javafx.web</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

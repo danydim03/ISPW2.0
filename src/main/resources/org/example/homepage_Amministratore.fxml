@@ -1,80 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<VBox xmlns:fx="http://javafx.com/fxml" prefHeight="453.0" prefWidth="650.0" spacing="10.0"
-      styleClass="background"
-      stylesheets="@styles/base-style.css, @styles/default.css, @styles/list-dashboard-style.css"
-      fx:controller="it.uniroma2.dicii.ispw.gradely.graphic_controllers_general.homepages.SecretaryHomepageGraphicController">
+<?import javafx.scene.text.Text?>
 
-    <!-- Exams verbalization -->
-    <HBox alignment="BASELINE_CENTER" prefHeight="52" styleClass="card-horizontal">
-        <padding>
-            <Insets topRightBottomLeft="10"/>
-        </padding>
-        <Label text="Exam verbalization"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button onAction="#verbalizeExam" styleClass="action-button, nav-action-button" HBox.hgrow="NEVER">
-            <padding>
-                <Insets topRightBottomLeft="6"/>
-            </padding>
-            <graphic>
-                <ImageView preserveRatio="true">
-                    <Image requestedHeight="20" requestedWidth="20" url="@images/right_arrow.png"/>
-                </ImageView>
-            </graphic>
-            <shape>
-                <Circle radius="19"/>
-            </shape>
-        </Button>
-    </HBox>
+<GridPane alignment="CENTER" hgap="30" prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/home-card-style.css" vgap="30" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.graphic_controllers_general.homepages.AdminHomepageGUIController">
 
-    <!-- Taxes management -->
-    <HBox alignment="BASELINE_CENTER" prefHeight="52" styleClass="card-horizontal">
-        <padding>
-            <Insets topRightBottomLeft="10"/>
-        </padding>
-        <Label text="Taxes management"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button onAction="#underConstructionPageSecretary" styleClass="action-button, nav-action-button"
-                HBox.hgrow="NEVER">
-            <padding>
-                <Insets topRightBottomLeft="6"/>
-            </padding>
-            <graphic>
-                <ImageView preserveRatio="true">
-                    <Image requestedHeight="20" requestedWidth="20" url="@images/right_arrow.png"/>
-                </ImageView>
-            </graphic>
-            <shape>
-                <Circle radius="19"/>
-            </shape>
-        </Button>
-    </HBox>
+    <!-- Definizione Colonne e Righe per centratura -->
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" />
+        <ColumnConstraints hgrow="NEVER" />
+        <ColumnConstraints hgrow="NEVER" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+        <RowConstraints vgrow="NEVER" />
+    </rowConstraints>
 
-    <!-- Subscriptions management -->
-    <HBox alignment="BASELINE_CENTER" prefHeight="52" styleClass="card-horizontal">
-        <padding>
-            <Insets topRightBottomLeft="10"/>
-        </padding>
-        <Label text="Subscriptions management"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button onAction="#underConstructionPageSecretary" styleClass="action-button, nav-action-button"
-                HBox.hgrow="NEVER">
-            <padding>
-                <Insets topRightBottomLeft="6"/>
-            </padding>
-            <graphic>
-                <ImageView preserveRatio="true">
-                    <Image requestedHeight="20" requestedWidth="20" url="@images/right_arrow.png"/>
-                </ImageView>
-            </graphic>
-            <shape>
-                <Circle radius="19"/>
-            </shape>
-        </Button>
-    </HBox>
-</VBox>
+    <!-- ================= RIGA 1 ================= -->
+
+    <!-- Card 1: Visualizza Ordini -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_comingSOON.png" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Ordini" />
+                    <Text styleClass="card-description" text="Visualizza e gestisci ordini" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleVisualizzaOrdini" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 2: Crea Voucher -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_comingSOON.png" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Voucher" />
+                    <Text styleClass="card-description" text="Crea nuovi voucher sconto" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleCreaVoucher" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 3: Gestione Utenti -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_comingSOON.png" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Utenti" />
+                    <Text styleClass="card-description" text="Gestisci gli utenti registrati" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleGestioneUtenti" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- ================= RIGA 2 ================= -->
+
+    <!-- Card 4: Logout -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_comingSOON.png" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Esci" />
+                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+</GridPane>

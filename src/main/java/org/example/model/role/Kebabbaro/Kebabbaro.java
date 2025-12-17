@@ -26,6 +26,7 @@ public class Kebabbaro extends AbstractRole {
     public List<String> getSignatureDishes() {
         return signatureDishes;
     }
+
     public int getMaxOrdersPerHour() {
         return maxOrdersPerHour;
     }
@@ -34,5 +35,10 @@ public class Kebabbaro extends AbstractRole {
         String name = (getUser() != null && getUser().getName() != null) ? getUser().getName() : "Unknown";
         return String.format("%s lavora con %s e può gestire fino a %d ordini/ora",
                 name, signatureDishes, maxOrdersPerHour);
+    }
+
+    @Override
+    public Kebabbaro getKebabbaroRole() {
+        return this;
     }
 }

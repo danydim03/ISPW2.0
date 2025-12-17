@@ -1,13 +1,14 @@
 package org.example.model.ordine;
 
 import org.example.dao_manager.DBConnection;
-import org.example. exceptions.*;
-import org.example. instances_management_abstracts.DAODBAbstract;
+import org.example.exceptions.*;
+import org.example.instances_management_abstracts.DAODBAbstract;
 import org.example.enums.StatoOrdine;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java. util.List;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Implementazione DAO per Ordine con persistenza su Database.
@@ -38,61 +39,63 @@ public class OrdineDAODB extends DAODBAbstract<Ordine> implements OrdineDAOInter
 
     @Override
     public Ordine getOrdineByNumero(Long numeroOrdine) throws DAOException, ObjectNotFoundException, PropertyException,
-            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getQuery(
                 ORDINE,
                 List.of(NUMERO_ORDINE),
                 List.of(numeroOrdine),
-                List. of()
-        );
+                List.of());
     }
 
     @Override
-    public List<Ordine> getOrdiniByCliente(String clienteId) throws DAOException, PropertyException, ResourceNotFoundException,
-            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public List<Ordine> getOrdiniByCliente(String clienteId)
+            throws DAOException, PropertyException, ResourceNotFoundException,
+            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getListQuery(
                 ORDINE,
                 List.of(CLIENTE_ID),
                 List.of(clienteId),
                 List.of(),
                 List.of(),
-                Boolean.FALSE
-        );
+                Boolean.FALSE);
     }
 
     @Override
-    public List<Ordine> getOrdiniByStato(StatoOrdine stato) throws DAOException, PropertyException, ResourceNotFoundException,
-            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public List<Ordine> getOrdiniByStato(StatoOrdine stato)
+            throws DAOException, PropertyException, ResourceNotFoundException,
+            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getListQuery(
                 ORDINE,
-                List. of(STATO),
+                List.of(STATO),
                 List.of(stato.name()),
                 List.of(),
                 List.of(),
-                Boolean.FALSE
-        );
+                Boolean.FALSE);
     }
 
     @Override
-    public void insert(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(Ordine ordine)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         // Genera il numero ordine se non presente
         if (ordine.getNumeroOrdine() == null) {
             ordine.setNumeroOrdine(getNextNumeroOrdine());
         }
 
         // Inserisci l'ordine
+        // NOTA: Usiamo Arrays.asList() perché List.of() non permette valori null
         insertQuery(
                 ORDINE,
-                List.of(
+                Arrays.asList(
                         ordine.getNumeroOrdine(),
                         ordine.getClienteId(),
                         Timestamp.valueOf(ordine.getDataCreazione()),
                         ordine.getDataConferma() != null ? Timestamp.valueOf(ordine.getDataConferma()) : null,
                         ordine.getStato().name(),
-                        ordine.hasVoucher() ? ordine. getVoucher().getCodice() : null,
-                        ordine.getTotale()
-                )
-        );
+                        ordine.hasVoucher() ? ordine.getVoucher().getCodice() : null,
+                        ordine.getTotale()));
     }
 
     @Override
@@ -100,26 +103,24 @@ public class OrdineDAODB extends DAODBAbstract<Ordine> implements OrdineDAOInter
         deleteQuery(
                 ORDINE,
                 List.of(NUMERO_ORDINE),
-                List.of(ordine.getNumeroOrdine())
-        );
+                List.of(ordine.getNumeroOrdine()));
     }
 
     @Override
-    public void update(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void update(Ordine ordine)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         updateQuery(
                 ORDINE,
                 List.of(CLIENTE_ID, DATA_CREAZIONE, DATA_CONFERMA, STATO, VOUCHER_CODICE, TOTALE),
-                List.of(
+                Arrays.asList(
                         ordine.getClienteId(),
                         Timestamp.valueOf(ordine.getDataCreazione()),
                         ordine.getDataConferma() != null ? Timestamp.valueOf(ordine.getDataConferma()) : null,
                         ordine.getStato().name(),
                         ordine.hasVoucher() ? ordine.getVoucher().getCodice() : null,
-                        ordine. getTotale()
-                ),
+                        ordine.getTotale()),
                 List.of(NUMERO_ORDINE),
-                List.of(ordine.getNumeroOrdine())
-        );
+                List.of(ordine.getNumeroOrdine()));
     }
 
     @Override
@@ -128,8 +129,8 @@ public class OrdineDAODB extends DAODBAbstract<Ordine> implements OrdineDAOInter
             Connection conn = DBConnection.getInstance().getConnection();
             String sql = "SELECT COALESCE(MAX(" + NUMERO_ORDINE + "), 0) + 1 AS next_numero FROM " + ORDINE;
 
-            try (PreparedStatement stmt = conn. prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql);
+                    ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getLong("next_numero");
                 }
@@ -160,10 +161,11 @@ public class OrdineDAODB extends DAODBAbstract<Ordine> implements OrdineDAOInter
         Ordine ordine = new Ordine(numOrdine, clienteId, dataCreazione, dataConferma, stato);
 
         // Carica il voucher se presente
-        String voucherCodice = rs. getString(VOUCHER_CODICE);
-        if (voucherCodice != null && !voucherCodice. isEmpty()) {
+        String voucherCodice = rs.getString(VOUCHER_CODICE);
+        if (voucherCodice != null && !voucherCodice.isEmpty()) {
             // Il voucher verrà caricato dal VoucherLazyFactory se necessario
-            // Per ora lasciamo NessunVoucher, il caricamento completo avverrà nel LazyFactory
+            // Per ora lasciamo NessunVoucher, il caricamento completo avverrà nel
+            // LazyFactory
         }
 
         return ordine;

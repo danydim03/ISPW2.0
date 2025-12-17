@@ -2,12 +2,12 @@ package org.example.model.ordine;
 
 import org.example.model.food.Food;
 import org.example.model.voucher.NessunVoucher;
-import org.example.model.voucher. Voucher;
+import org.example.model.voucher.Voucher;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import  org.example.enums.StatoOrdine;
+import org.example.enums.StatoOrdine;
 
 /**
  * Entity che rappresenta un Ordine.
@@ -24,7 +24,6 @@ public class Ordine {
     private LocalDateTime dataConferma;
     private StatoOrdine stato;
 
-
     /**
      * Costruttore per nuovo ordine
      */
@@ -40,14 +39,14 @@ public class Ordine {
      * Costruttore completo (per caricamento da DB)
      */
     public Ordine(Long numeroOrdine, String clienteId, LocalDateTime dataCreazione,
-                  LocalDateTime dataConferma, StatoOrdine stato) {
+            LocalDateTime dataConferma, StatoOrdine stato) {
         this.numeroOrdine = numeroOrdine;
         this.clienteId = clienteId;
         this.prodotti = new ArrayList<>();
         this.voucher = new NessunVoucher();
         this.dataCreazione = dataCreazione;
         this.dataConferma = dataConferma;
-        this. stato = stato;
+        this.stato = stato;
     }
 
     // ==================== GESTIONE PRODOTTI ====================
@@ -88,7 +87,7 @@ public class Ordine {
 
     public void applicaVoucher(Voucher voucher) {
         if (voucher != null && voucher.isValido()) {
-            this. voucher = voucher;
+            this.voucher = voucher;
         }
     }
 
@@ -101,7 +100,7 @@ public class Ordine {
     }
 
     public void setVoucher(Voucher voucher) {
-        this. voucher = voucher != null ? voucher : new NessunVoucher();
+        this.voucher = voucher != null ? voucher : new NessunVoucher();
     }
 
     public boolean hasVoucher() {
@@ -125,7 +124,7 @@ public class Ordine {
      * Calcola l'importo dello sconto
      */
     public double getSconto() {
-        return voucher. calcolaSconto(getSubtotale());
+        return voucher.calcolaSconto(getSubtotale());
     }
 
     /**
@@ -149,8 +148,8 @@ public class Ordine {
     // ==================== GESTIONE STATO ====================
 
     public void conferma() {
-        this.stato = StatoOrdine. CONFERMATO;
-        this. dataConferma = LocalDateTime. now();
+        this.stato = StatoOrdine.CONFERMATO;
+        this.dataConferma = LocalDateTime.now();
     }
 
     public void annulla() {
@@ -162,11 +161,11 @@ public class Ordine {
     }
 
     public void segnaComePronto() {
-        this. stato = StatoOrdine. PRONTO;
+        this.stato = StatoOrdine.PRONTO;
     }
 
     public void segnaConsegnato() {
-        this. stato = StatoOrdine. CONSEGNATO;
+        this.stato = StatoOrdine.CONSEGNATO;
     }
 
     public boolean isModificabile() {
@@ -180,7 +179,7 @@ public class Ordine {
     }
 
     public void setNumeroOrdine(Long numeroOrdine) {
-        this. numeroOrdine = numeroOrdine;
+        this.numeroOrdine = numeroOrdine;
     }
 
     public String getClienteId() {
@@ -188,7 +187,7 @@ public class Ordine {
     }
 
     public void setClienteId(String clienteId) {
-        this. clienteId = clienteId;
+        this.clienteId = clienteId;
     }
 
     public LocalDateTime getDataCreazione() {
@@ -219,8 +218,10 @@ public class Ordine {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Ordine)) return false;
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Ordine))
+            return false;
         Ordine other = (Ordine) obj;
         return numeroOrdine != null && numeroOrdine.equals(other.numeroOrdine);
     }

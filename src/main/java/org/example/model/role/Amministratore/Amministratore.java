@@ -26,7 +26,7 @@ public class Amministratore extends AbstractRole {
     public int getAccessLevel() {
         return accessLevel;
     }
-    
+
     public String describeRole() {
         String name = (getUser() != null && getUser().getName() != null) ? getUser().getName() : "Unknown";
         return String.format("%s è Amministratore del reparto %s con livello di accesso %d",
@@ -35,5 +35,10 @@ public class Amministratore extends AbstractRole {
 
     public boolean hasFullAccess() {
         return accessLevel >= 5;
+    }
+
+    @Override
+    public Amministratore getAmministratoreRole() {
+        return this;
     }
 }

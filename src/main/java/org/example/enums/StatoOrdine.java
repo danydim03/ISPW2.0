@@ -8,6 +8,7 @@ public enum StatoOrdine {
     CONFERMATO,
     IN_PREPARAZIONE,
     PRONTO,
+    IN_CONSEGNA,
     CONSEGNATO,
     ANNULLATO
 }

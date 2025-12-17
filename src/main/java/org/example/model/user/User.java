@@ -6,8 +6,8 @@ import org.example.model.role.AbstractRole;
 
 import java.time.LocalDate;
 
-
 public class User {
+    private String id; // ID del database (es. CLI001)
     private String name;
     private String surname;
     private String codiceFiscale;
@@ -16,7 +16,8 @@ public class User {
     private LocalDate registrationDate;
     private AbstractRole role;
 
-    protected User(String name, String surname, String codiceFiscale, String email, String password, LocalDate registrationDate) {
+    protected User(String name, String surname, String codiceFiscale, String email, String password,
+            LocalDate registrationDate) {
         this.name = name;
         this.surname = surname;
         this.codiceFiscale = codiceFiscale;
@@ -25,35 +26,43 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getSurname(){
+    public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname){
+    public void setSurname(String surname) {
         this.surname = surname;
     }
 
-    public String getCodiceFiscale(){
+    public String getCodiceFiscale() {
         return codiceFiscale;
     }
 
-    public void setCodiceFiscale(String codiceFiscale){
+    public void setCodiceFiscale(String codiceFiscale) {
         this.codiceFiscale = codiceFiscale;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -74,14 +83,17 @@ public class User {
     }
 
     public Boolean checkPassword(String password) throws WrongPasswordException {
-        if (this.password.equals(password)) return true;
-        else throw new WrongPasswordException(ExceptionMessagesEnum.WRONG_PASSWORD.message);
+        if (this.password.equals(password))
+            return true;
+        else
+            throw new WrongPasswordException(ExceptionMessagesEnum.WRONG_PASSWORD.message);
     }
 
     public void changePassword(String oldPass, String newPass) throws WrongPasswordException {
         if (this.password.equals(oldPass)) {
             this.password = newPass;
-        } else throw new WrongPasswordException(ExceptionMessagesEnum.WRONG_PASSWORD.message);
+        } else
+            throw new WrongPasswordException(ExceptionMessagesEnum.WRONG_PASSWORD.message);
     }
 
     String getPassword() {

@@ -27,56 +27,59 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
     }
 
     @Override
-    public Amministratore getAmministratoreByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public Amministratore getAmministratoreByUser(User user) throws DAOException, UserNotFoundException,
+            PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 AMMINISTRATORE,
                 List.of(CODICE),
-                List.of(user.getCodiceFiscale()),
-                List.of(user)
-        );
+                List.of(user.getId()),
+                List.of(user));
     }
 
     @Override
-    public void insert(Amministratore amministratore) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(Amministratore amministratore)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 AMMINISTRATORE,
                 List.of(
                         amministratore.getUser().getCodiceFiscale(),
                         amministratore.getDepartment(),
-                        amministratore.getAccessLevel()
-                )
-        );
+                        amministratore.getAccessLevel()));
     }
 
     @Override
-    public void delete(Amministratore amministratore) throws DAOException, PropertyException, ResourceNotFoundException {
+    public void delete(Amministratore amministratore)
+            throws DAOException, PropertyException, ResourceNotFoundException {
         deleteQuery(
                 AMMINISTRATORE,
                 List.of(CODICE),
-                List.of(amministratore.getUser().getCodiceFiscale())
-        );
+                List.of(amministratore.getUser().getCodiceFiscale()));
     }
 
     @Override
-    public void update(Amministratore amministratore) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
+    public void update(Amministratore amministratore)
+            throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
         updateQuery(
                 AMMINISTRATORE,
                 List.of(DEPARTMENT, ACCESS_LEVEL),
                 List.of(amministratore.getDepartment(), amministratore.getAccessLevel()),
                 List.of(CODICE),
-                List.of(amministratore.getUser().getCodiceFiscale())
-        );
+                List.of(amministratore.getUser().getCodiceFiscale()));
     }
 
     @Override
-    protected Amministratore queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongListQueryIdentifierValue, ObjectNotFoundException {
+    protected Amministratore queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException,
+            PropertyException, ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue, ObjectNotFoundException {
         String department = rs.getString(DEPARTMENT);
         int accessLevel = rs.getInt(ACCESS_LEVEL);
         return new Amministratore((User) objects.get(0), department, accessLevel);
     }
 
     @Override
-    protected String setGetListQueryIdentifiersValue(Amministratore amministratore, int valueNumber) throws DAOException {
+    protected String setGetListQueryIdentifiersValue(Amministratore amministratore, int valueNumber)
+            throws DAOException {
         return null;
     }
 }

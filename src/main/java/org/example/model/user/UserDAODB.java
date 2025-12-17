@@ -24,10 +24,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  {
-    private static final   String EMAIL = "email";
-    private static final  String CODICE_FISCALE = "codice_fiscale";
+public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface {
+    private static final String EMAIL = "email";
+    private static final String CODICE_FISCALE = "codice_fiscale";
     protected static UserDAOInterface instance;
 
     private UserDAODB() {
@@ -42,39 +41,41 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public User getUserByEmail(String email) throws UserNotFoundException, DAOException, PropertyException,
+            ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
                 List.of(EMAIL),
                 List.of(email),
-                null
-        );
+                null);
     }
 
     @Override
-    public User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public User getUserByCodiceFiscale(String codiceFiscale) throws UserNotFoundException, DAOException,
+            PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 "USER",
                 List.of(CODICE_FISCALE),
                 List.of(codiceFiscale),
-                null
-        );
+                null);
     }
 
-
-
-
     @Override
-    protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException,
+            PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         User user = new User(
                 rs.getString("name"),
                 rs.getString("surname"),
                 rs.getString(CODICE_FISCALE),
                 rs.getString(EMAIL),
                 rs.getString("password"),
-                rs.getDate("registration_date").toLocalDate()
-        );
-        setUserRoleByRoleEnum(user,UserRoleEnum.getUserRoleByType(rs.getInt("role")));
+                rs.getDate("registration_date").toLocalDate());
+        // Imposta l'ID dal database (es. CLI001)
+        user.setId(rs.getString("ID"));
+        setUserRoleByRoleEnum(user, UserRoleEnum.getUserRoleByType(rs.getInt("role")));
         return user;
     }
 
@@ -84,11 +85,13 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
     }
 
     @Override
-    public void insert(User user) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(User user)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 "USER",
-                List.of(user.getCodiceFiscale(), user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()), user.getEmail(),user.getRole().getRoleEnumType().type)
-        );
+                List.of(user.getCodiceFiscale(), user.getName(), user.getSurname(), user.getPassword(),
+                        Date.valueOf(user.getRegistrationDate()), user.getEmail(),
+                        user.getRole().getRoleEnumType().type));
     }
 
     @Override
@@ -96,16 +99,17 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
         deleteQuery(
                 "USER",
                 List.of(CODICE_FISCALE),
-                List.of(user.getCodiceFiscale())
-        );
+                List.of(user.getCodiceFiscale()));
     }
 
     @Override
-    public void update(User user) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
+    public void update(User user)
+            throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
         updateQuery(
                 "USER",
-                List.of( "name", "surname", "password", "registration_date", EMAIL, "role"),
-                List.of(user.getName(),user.getSurname(),user.getPassword(),Date.valueOf(user.getRegistrationDate()),user.getEmail(),user.getRole().getRoleEnumType().type),
+                List.of("name", "surname", "password", "registration_date", EMAIL, "role"),
+                List.of(user.getName(), user.getSurname(), user.getPassword(), Date.valueOf(user.getRegistrationDate()),
+                        user.getEmail(), user.getRole().getRoleEnumType().type),
                 List.of(CODICE_FISCALE),
                 List.of(user.getCodiceFiscale()));
     }
@@ -115,11 +119,15 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface  
      *
      * @param user the User whose role has to be set
      * @param role the role to be set ot the User
-     * @throws UnrecognizedRoleException thrown if the role value cannot be cast to any enum value
-     * @throws DAOException              thrown if errors occur while retrieving data from persistence layer
+     * @throws UnrecognizedRoleException thrown if the role value cannot be cast to
+     *                                   any enum value
+     * @throws DAOException              thrown if errors occur while retrieving
+     *                                   data from persistence layer
      * @throws UserNotFoundException     thrown if the given User cannot be found
      */
-    protected void setUserRoleByRoleEnum(User user, UserRoleEnum role) throws UnrecognizedRoleException, DAOException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    protected void setUserRoleByRoleEnum(User user, UserRoleEnum role)
+            throws UnrecognizedRoleException, DAOException, UserNotFoundException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         switch (role) {
             case CLIENTE -> user.setRole(ClienteLazyFactory.getInstance().getClienteByUser(user));
             case KEBABBARO -> user.setRole(KebabbaroLazyFactory.getInstance().getKebabbaroByUser(user));

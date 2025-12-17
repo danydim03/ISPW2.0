@@ -26,21 +26,22 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
     }
 
     @Override
-    public Kebabbaro getKebabbaroByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public Kebabbaro getKebabbaroByUser(User user) throws DAOException, UserNotFoundException, PropertyException,
+            ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         return getQuery(
                 KEBABBARO,
                 List.of(CODICE),
-                List.of(user.getCodiceFiscale()),
-                List.of(user)
-        );
+                List.of(user.getId()),
+                List.of(user));
     }
 
     @Override
-    public void insert(Kebabbaro kebabbaro) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(Kebabbaro kebabbaro)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 KEBABBARO,
-                List.of(kebabbaro.getUser().getCodiceFiscale())
-        );
+                List.of(kebabbaro.getUser().getCodiceFiscale()));
     }
 
     @Override
@@ -48,23 +49,24 @@ public class KebabbaroDAODB extends DAODBAbstract<Kebabbaro> implements Kebabbar
         deleteQuery(
                 KEBABBARO,
                 List.of(CODICE),
-                List.of(kebabbaro.getUser().getCodiceFiscale())
-        );
+                List.of(kebabbaro.getUser().getCodiceFiscale()));
     }
 
     @Override
-    public void update(Kebabbaro kebabbaro) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
+    public void update(Kebabbaro kebabbaro)
+            throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
         updateQuery(
                 KEBABBARO,
                 List.of(),
                 List.of(),
                 List.of(CODICE),
-                List.of(kebabbaro.getUser().getCodiceFiscale())
-        );
+                List.of(kebabbaro.getUser().getCodiceFiscale()));
     }
 
     @Override
-    protected Kebabbaro queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongListQueryIdentifierValue, ObjectNotFoundException {
+    protected Kebabbaro queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException,
+            PropertyException, ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue, ObjectNotFoundException {
         return new Kebabbaro((User) objects.get(0), new ArrayList<>(), 10);
     }
 
