@@ -23,6 +23,7 @@ public class Ordine {
     private LocalDateTime dataCreazione;
     private LocalDateTime dataConferma;
     private StatoOrdine stato;
+    private Double totaleCached; // Used when loading from DB
 
     /**
      * Costruttore per nuovo ordine
@@ -129,9 +130,20 @@ public class Ordine {
 
     /**
      * Calcola il totale finale (con sconto applicato)
+     * Se l'ordine è stato caricato dal DB e ha un totale cached, restituisce quello
      */
     public double getTotale() {
+        if (totaleCached != null && prodotti.isEmpty()) {
+            return totaleCached;
+        }
         return getSubtotale() - getSconto();
+    }
+
+    /**
+     * Imposta il totale cached (usato quando si carica dal DB)
+     */
+    public void setTotaleCached(Double totale) {
+        this.totaleCached = totale;
     }
 
     /**

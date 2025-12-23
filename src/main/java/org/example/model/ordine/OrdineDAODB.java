@@ -160,6 +160,10 @@ public class OrdineDAODB extends DAODBAbstract<Ordine> implements OrdineDAOInter
 
         Ordine ordine = new Ordine(numOrdine, clienteId, dataCreazione, dataConferma, stato);
 
+        // Leggi e imposta il totale dal database
+        double totaleDB = rs.getDouble(TOTALE);
+        ordine.setTotaleCached(totaleDB);
+
         // Carica il voucher se presente
         String voucherCodice = rs.getString(VOUCHER_CODICE);
         if (voucherCodice != null && !voucherCodice.isEmpty()) {
