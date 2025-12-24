@@ -1,14 +1,14 @@
 package org.example.use_cases.crea_ordine;
 
 import org.example.exceptions.*;
-import org.example.exceptions.VoucherNotValidException;
 import org.example.model.food.*;
 import org.example.model.food.Decorator.*;
 import org.example.model.ordine.Ordine;
 import org.example.model.ordine.OrdineLazyFactory;
-import org.example.model.voucher.*;
+import org.example.model.voucher.Voucher;
 import org.example.use_cases.crea_ordine.beans.*;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
+import org.example.use_cases.usa_voucher.UsaVoucherController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,18 @@ import java.util.List;
  * - Orchestrare la logica di business per la creazione dell'ordine
  * - Convertire i Bean in Entity e viceversa
  * - Applicare il pattern Decorator per gli add-on
- * - Applicare il pattern Strategy per i voucher
+ * - DELEGARE la gestione voucher a UsaVoucherController (GRASP: Low Coupling)
  * 
  * Segue il pattern BCE: questo è il CONTROL.
  */
 public class CreaOrdineController {
 
     private Ordine ordineCorrente;
+    private final UsaVoucherController voucherController;
 
     public CreaOrdineController() {
         // Il controller viene istanziato dal Facade o dal Controller Grafico
+        this.voucherController = new UsaVoucherController();
     }
 
     /**
@@ -87,22 +89,13 @@ public class CreaOrdineController {
             return false;
         }
 
-        // Crea il prodotto base
-        // Factory Method
-        // (potrebbe essere esteso per supportare più tipi di prodotti)
-        // (ad esempio, usando reflection o una mappa di classi)
-        // Qui usiamo un semplice switch-case per l'esempio
-        // Crea il prodotto base
+        // Crea il prodotto base usando Factory Method
         Food prodotto = creaProdottoBase(foodBean.getClasse());
         if (prodotto == null) {
             return false;
         }
 
         // Applica gli add-on usando il pattern Decorator
-        // Itera sulla lista delle classi degli add-on selezionati
-        // e avvolgi il prodotto con i decorator corrispondenti
-        // Decorator Pattern
-        // (potrebbe essere esteso per supportare più add-on)
         for (String addOnClasse : foodBean.getAddOnSelezionati()) {
             prodotto = applicaDecorator(prodotto, addOnClasse);
         }
@@ -133,6 +126,7 @@ public class CreaOrdineController {
 
     /**
      * Applica un voucher all'ordine corrente.
+     * DELEGA a UsaVoucherController (GRASP: Single Responsibility).
      * 
      * @param codiceVoucher il codice del voucher da applicare
      * @return VoucherBean con i dati del voucher applicato, null se non valido
@@ -141,38 +135,18 @@ public class CreaOrdineController {
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
 
-        if (ordineCorrente == null || codiceVoucher == null || codiceVoucher.trim().isEmpty()) {
+        if (ordineCorrente == null) {
             return null;
         }
-
-        try {
-            // Cerca il voucher nel sistema
-            Voucher voucher = VoucherLazyFactory.getInstance().getVoucherByCodice(codiceVoucher.trim().toUpperCase());
-
-            // Verifica validità
-            if (voucher == null || !voucher.isValido()) {
-                return null;
-            }
-
-            // Applica il voucher all'ordine
-            ordineCorrente.applicaVoucher(voucher);
-
-            // Converti in Bean e restituisci
-            return convertVoucherToBean(voucher);
-
-        } catch (ObjectNotFoundException e) {
-            // Voucher non trovato
-            return null;
-        }
+        return voucherController.applicaVoucherAOrdine(ordineCorrente, codiceVoucher);
     }
 
     /**
-     * Rimuove il voucher dall'ordine corrente
+     * Rimuove il voucher dall'ordine corrente.
+     * DELEGA a UsaVoucherController.
      */
     public void rimuoviVoucher() {
-        if (ordineCorrente != null) {
-            ordineCorrente.rimuoviVoucher();
-        }
+        voucherController.rimuoviVoucherDaOrdine(ordineCorrente);
     }
 
     /**
@@ -203,8 +177,8 @@ public class CreaOrdineController {
         riepilogo.setTotale(ordineCorrente.getTotale());
         riepilogo.setDurataTotale(ordineCorrente.getDurataTotale());
 
-        // Info voucher
-        if (ordineCorrente.hasVoucher()) {
+        // Info voucher - delega a UsaVoucherController per la conversione
+        if (voucherController.hasVoucherApplicato(ordineCorrente)) {
             Voucher v = ordineCorrente.getVoucher();
             riepilogo.setVoucherApplicato(true);
             riepilogo.setCodiceVoucher(v.getCodice());
@@ -302,28 +276,6 @@ public class CreaOrdineController {
         bean.setDurata(food.getDurata());
         bean.setTipo(food.getTipo());
         bean.setClasse(food.getClass().getSimpleName());
-        return bean;
-    }
-
-    /**
-     * Converte un Voucher in VoucherBean
-     */
-    private VoucherBean convertVoucherToBean(Voucher voucher) {
-        VoucherBean bean = new VoucherBean();
-        bean.setId(voucher.getId());
-        bean.setCodice(voucher.getCodice());
-        bean.setDescrizione(voucher.getDescrizione());
-        bean.setTipoVoucher(voucher.getTipoVoucher());
-        bean.setDataScadenza(voucher.getDataScadenza());
-        bean.setValido(voucher.isValido());
-
-        if (voucher instanceof VoucherPercentuale) {
-            bean.setValore(((VoucherPercentuale) voucher).getPercentuale());
-        } else if (voucher instanceof VoucherFisso) {
-            bean.setValore(((VoucherFisso) voucher).getImportoSconto());
-            bean.setMinimoOrdine(((VoucherFisso) voucher).getMinimoOrdine());
-        }
-
         return bean;
     }
 }
