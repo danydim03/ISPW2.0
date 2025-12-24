@@ -157,7 +157,7 @@
         </AnchorPane>
     </AnchorPane>
 
-    <!-- Card 5: Assistenza -->
+    <!-- Card 5: WEBSITE -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <Image url="@images/habibi_comingSOON.png" />
@@ -169,10 +169,10 @@
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                    <Label styleClass="card-title" text="Assistenza" />
+                    <Label styleClass="card-title" text="Website" />
                     <Text styleClass="card-description" text="Contatta il supporto clienti" wrappingWidth="130" />
                 </VBox>
-                <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER">
+                <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER" onAction="#handleWebsite">
                     <shape>
                         <Circle radius="15" />
                     </shape>

@@ -55,9 +55,13 @@ public class ClienteHomepageGraphicController {
     }
 
     @FXML
-    void handleAssistenza(ActionEvent event) {
-        mostraPlaceholder("Assistenza Clienti", "Contatta il supporto tecnico.");
-        // TODO: PageNavigationController.getInstance().navigateTo("Assistenza");
+    void handleWebsite(ActionEvent event) {
+        logger.log(Level.INFO, "Apertura sito web Habibi");
+        try {
+            java.awt.Desktop.getDesktop().browse(new java.net.URI("https://www.yahabibi.it"));
+        } catch (Exception e) {
+            mostraErrore("Errore", "Impossibile aprire il sito web: " + e.getMessage());
+        }
     }
 
     private void mostraPlaceholder(String titolo, String messaggio) {
