@@ -28,7 +28,7 @@ public class MainApplication extends Application {
             // Nota: ho rimosso le dimensioni fisse 720, 512, lasciando che l'FXML (890x550)
             // e il layout manager determinino le dimensioni iniziali.
             Scene scene = new Scene(basePane);
-            stage.setTitle("HABIBI YALLA");
+            stage.setTitle("ISPW PROJECT 2026");
             stage.setScene(scene);
         }
         // *************************************************************
